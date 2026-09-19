@@ -9,17 +9,26 @@ use App\Http\Controllers\Telecaller\DashboardController as TelecallerDashboardCo
 use App\Http\Controllers\Telecaller\StudentController as TelecallerStudentController;
 use Illuminate\Support\Facades\Route;
 
-// Root redirect
-Route::get('/', function () {
-    if (auth()->check()) {
-        if (auth()->user()->hasRole(['Super Admin', 'Admin'])) {
-            return redirect()->route('admin.dashboard');
-        }
-        if (auth()->user()->hasRole('Telecaller')) {
-            return redirect()->route('telecaller.dashboard');
-        }
-    }
-    return redirect()->route('login');
+use App\Http\Controllers\FrontendController;
+
+// ==========================================
+// Frontend Public Routes
+// ==========================================
+Route::name('frontend.')->group(function () {
+    Route::get('/', [FrontendController::class, 'index'])->name('index');
+    Route::get('/apply', [FrontendController::class, 'apply'])->name('apply');
+    Route::post('/apply', [FrontendController::class, 'storeApply'])->name('apply.submit');
+    Route::get('/confirmation', [FrontendController::class, 'confirmation'])->name('confirmation');
+    Route::get('/courses', [FrontendController::class, 'courses'])->name('courses');
+    Route::get('/process', [FrontendController::class, 'process'])->name('process');
+    Route::get('/enrollment', [FrontendController::class, 'enrollment'])->name('enrollment');
+    Route::get('/news', [FrontendController::class, 'news'])->name('news');
+    Route::get('/videos', [FrontendController::class, 'videos'])->name('videos');
+    Route::get('/partners', [FrontendController::class, 'partners'])->name('partners');
+    Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+    Route::post('/contact', [FrontendController::class, 'storeContact'])->name('contact.submit');
+    Route::get('/services', [FrontendController::class, 'services'])->name('services');
+    Route::get('/programs', [FrontendController::class, 'programs'])->name('programs');
 });
 
 // Authentication Routes
