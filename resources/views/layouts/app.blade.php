@@ -66,6 +66,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94A3B8;
         }
+        [x-cloak] { display: none !important; }
         .brand-gradient {
             background: linear-gradient(135deg, #E51E25 0%, #F37021 50%, #F8971D 100%);
         }
@@ -75,7 +76,7 @@
     </style>
     @stack('styles')
 </head>
-<body class="h-full bg-slate-50 font-sans antialiased flex overflow-hidden selection:bg-red-600 selection:text-white" x-data="{ sidebarOpen: false }">
+<body class="h-full bg-slate-50 font-sans antialiased flex overflow-hidden selection:bg-red-600 selection:text-white" x-data="{ sidebarOpen: false, logoutModalOpen: false }">
 
     <!-- Mobile Sidebar Backdrop -->
     <div 
@@ -204,16 +205,14 @@
 
         <!-- Sidebar Footer -->
         <div class="p-3 border-t border-slate-100 bg-white">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button 
-                    type="submit" 
-                    class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition duration-150"
-                >
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    <span>Sign Out</span>
-                </button>
-            </form>
+            <button 
+                type="button" 
+                @click="logoutModalOpen = true"
+                class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition duration-150 cursor-pointer"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
         </div>
     </aside>
 
@@ -246,13 +245,15 @@
                     <span>MAMP Active</span>
                 </div>
 
-                <!-- Logout -->
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" title="Logout" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition">
-                        <i class="fa-solid fa-power-off text-sm"></i>
-                    </button>
-                </form>
+                <!-- Logout Trigger -->
+                <button 
+                    type="button" 
+                    @click="logoutModalOpen = true" 
+                    title="Sign Out" 
+                    class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
+                >
+                    <i class="fa-solid fa-power-off text-sm"></i>
+                </button>
             </div>
         </header>
 
@@ -317,6 +318,79 @@
 
             @yield('content')
         </main>
+    </div>
+
+    <!-- Small Logout Confirmation Modal -->
+    <div 
+        x-show="logoutModalOpen" 
+        x-cloak
+        class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4"
+        aria-labelledby="logout-modal-title" 
+        role="dialog" 
+        aria-modal="true"
+    >
+        <!-- Dark Backdrop with smooth blur -->
+        <div 
+            x-show="logoutModalOpen"
+            x-transition:enter="ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            @click="logoutModalOpen = false" 
+            class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+        ></div>
+
+        <!-- Modal Box -->
+        <div 
+            x-show="logoutModalOpen"
+            x-transition:enter="ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+            x-transition:leave="ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
+            @keydown.escape.window="logoutModalOpen = false"
+            class="relative bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100 z-10 overflow-hidden transform transition-all"
+        >
+            <!-- Top Gradient Accent -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-600 via-orange-500 to-amber-500"></div>
+
+            <!-- Warning Icon -->
+            <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 mb-4 mt-1">
+                <i class="fa-solid fa-right-from-bracket text-xl"></i>
+            </div>
+
+            <!-- Modal Text -->
+            <h3 class="text-lg font-black font-heading text-slate-900 mb-1" id="logout-modal-title">
+                Sign Out Workspace
+            </h3>
+            <p class="text-xs text-slate-500 leading-relaxed mb-6 px-2">
+                Are you sure you want to end your session? Any unsaved lead edits may be lost.
+            </p>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <button 
+                    type="button" 
+                    @click="logoutModalOpen = false" 
+                    class="flex-1 py-2.5 px-4 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 transition cursor-pointer"
+                >
+                    Cancel
+                </button>
+                <form action="{{ route('logout') }}" method="POST" class="flex-1 m-0">
+                    @csrf
+                    <button 
+                        type="submit" 
+                        class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white text-xs font-bold shadow-md shadow-rose-500/20 transition cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                        <i class="fa-solid fa-power-off text-[11px]"></i>
+                        <span>Yes, Sign Out</span>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     @stack('scripts')
