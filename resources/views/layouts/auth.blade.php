@@ -59,34 +59,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .bg-pattern-light {
-            background-image: radial-gradient(rgba(229, 30, 37, 0.05) 1px, transparent 1px);
-            background-size: 24px 24px;
-        }
     </style>
+    @stack('styles')
 </head>
-<body class="h-full bg-slate-50 text-slate-800 font-sans antialiased flex flex-col justify-center py-10 sm:px-6 lg:px-8 relative overflow-x-hidden bg-pattern-light">
-    
-    <!-- Light Ambient Glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-r from-red-500/10 via-orange-400/10 to-amber-300/10 rounded-full blur-[100px] pointer-events-none"></div>
-
-    <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10 text-center">
-        <!-- Logo Display on clean white card -->
-        <div class="inline-flex items-center justify-center p-3.5 bg-white rounded-2xl shadow-sm border border-slate-200 mb-3">
-            <img src="{{ asset('images/logo.svg') }}" alt="Uddan Educational Foundation" class="h-12 w-auto object-contain">
-        </div>
-        <p class="text-xs font-bold text-slate-700 tracking-wide mt-1">
-            Bihar Students Counselling Center Awareness Program
-        </p>
-        <p class="text-[11px] text-slate-500 mt-0.5">Telecaller CRM & Student Admission Portal</p>
-    </div>
-
-    <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
-        @yield('content')
-    </div>
-
-    <div class="mt-8 text-center text-xs text-slate-500 relative z-10">
-        &copy; {{ date('Y') }} Uddan Educational Foundation. All rights reserved.
-    </div>
+<body class="h-full bg-slate-50 text-slate-800 font-sans antialiased">
+    @yield('content')
 </body>
 </html>
