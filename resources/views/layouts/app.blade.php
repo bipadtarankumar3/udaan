@@ -146,12 +146,13 @@
                         <i class="fa-solid fa-graduation-cap w-4 text-center {{ request()->routeIs('admin.students.*') ? 'text-white' : 'text-slate-400' }}"></i>
                         <span>Student Leads</span>
                     </div>
-                    @php $unassigned = \App\Models\Student::whereNull('assigned_to')->count(); @endphp
+                    {{-- Telecaller assignment count temporarily hidden --}}
+                    {{-- @php $unassigned = \App\Models\Student::whereNull('assigned_to')->count(); @endphp
                     @if($unassigned > 0)
                         <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ request()->routeIs('admin.students.*') ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-700' }}">
                             {{ $unassigned }}
                         </span>
-                    @endif
+                    @endif --}}
                 </a>
 
             @else
