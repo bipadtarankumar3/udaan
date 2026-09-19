@@ -237,7 +237,8 @@
                     </button>
                 </form>
 
-                <!-- 1-Click Fast Test Credentials Section -->
+                {{-- Quick Demo Accounts Section (Temporarily hidden) --}}
+                {{--
                 <div class="mt-6 pt-5 border-t border-slate-100">
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -321,6 +322,7 @@
                         </button>
                     </div>
                 </div>
+                --}}
 
             </div>
 
