@@ -117,8 +117,111 @@
             </div>
         </div>
 
+        <!-- Dynamic Summary Stats Cards (Updates automatically with Active Filters) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4 border-t border-slate-100">
+            <!-- 1. Total Filtered Leads -->
+            <a 
+                href="{{ route('admin.students.index', request()->except(['source_type', 'assigned_to', 'page'])) }}" 
+                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100/80 hover:to-slate-100 border {{ (!request('source_type') && !request('assigned_to')) ? 'border-slate-400/80 shadow-sm ring-1 ring-slate-400/30' : 'border-slate-200/80' }} transition-all flex flex-col justify-between"
+                title="View All Leads with current search/filter"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Leads</span>
+                    <span class="w-7 h-7 rounded-xl bg-slate-200/70 text-slate-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                </div>
+                <div class="mt-2.5 flex items-baseline justify-between">
+                    <span class="text-2xl font-black text-slate-900 font-heading tracking-tight">{{ number_format($stats['total'] ?? 0) }}</span>
+                    <span class="text-[10px] font-medium text-slate-500 bg-slate-200/60 px-1.5 py-0.5 rounded-md flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Total
+                    </span>
+                </div>
+            </a>
+
+            <!-- 2. Web Registered Leads -->
+            <a 
+                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['source_type' => request('source_type') === 'web' ? null : 'web'])) }}" 
+                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-emerald-50/70 to-emerald-100/40 hover:to-emerald-100/70 border {{ request('source_type') === 'web' ? 'border-emerald-500 shadow-sm ring-2 ring-emerald-500/20 bg-emerald-50' : 'border-emerald-200/70' }} transition-all flex flex-col justify-between"
+                title="Filter Website Registered Leads"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-semibold text-emerald-800 uppercase tracking-wider">Web Applied</span>
+                    <span class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-globe"></i>
+                    </span>
+                </div>
+                <div class="mt-2.5 flex items-baseline justify-between">
+                    <span class="text-2xl font-black text-emerald-950 font-heading tracking-tight">{{ number_format($stats['web_registered'] ?? 0) }}</span>
+                    <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.5 rounded-md">
+                        Online Portal
+                    </span>
+                </div>
+            </a>
+
+            <!-- 3. Admin / Bulk CSV Uploaded Leads -->
+            <a 
+                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['source_type' => request('source_type') === 'admin' ? null : 'admin'])) }}" 
+                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-indigo-50/70 to-indigo-100/40 hover:to-indigo-100/70 border {{ request('source_type') === 'admin' ? 'border-indigo-500 shadow-sm ring-2 ring-indigo-500/20 bg-indigo-50' : 'border-indigo-200/70' }} transition-all flex flex-col justify-between"
+                title="Filter Admin Added & CSV Uploaded Leads"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-semibold text-indigo-800 uppercase tracking-wider">Admin / Bulk</span>
+                    <span class="w-7 h-7 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                </div>
+                <div class="mt-2.5 flex items-baseline justify-between">
+                    <span class="text-2xl font-black text-indigo-950 font-heading tracking-tight">{{ number_format($stats['admin_uploaded'] ?? 0) }}</span>
+                    <span class="text-[10px] font-semibold text-indigo-700 bg-indigo-100/80 px-1.5 py-0.5 rounded-md">
+                        CSV & Direct
+                    </span>
+                </div>
+            </a>
+
+            <!-- 4. Assigned Leads -->
+            <a 
+                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['assigned_to' => (request('assigned_to') && request('assigned_to') !== 'unassigned') ? null : ''])) }}" 
+                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-amber-50/70 to-amber-100/40 hover:to-amber-100/70 border {{ (request('assigned_to') && request('assigned_to') !== 'unassigned') ? 'border-amber-500 shadow-sm ring-2 ring-amber-500/20 bg-amber-50' : 'border-amber-200/70' }} transition-all flex flex-col justify-between"
+                title="Assigned to Telecallers"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-semibold text-amber-800 uppercase tracking-wider">Assigned</span>
+                    <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-headset"></i>
+                    </span>
+                </div>
+                <div class="mt-2.5 flex items-baseline justify-between">
+                    <span class="text-2xl font-black text-amber-950 font-heading tracking-tight">{{ number_format($stats['assigned'] ?? 0) }}</span>
+                    <span class="text-[10px] font-semibold text-amber-700 bg-amber-100/80 px-1.5 py-0.5 rounded-md">
+                        In Counseling
+                    </span>
+                </div>
+            </a>
+
+            <!-- 5. Unassigned Leads -->
+            <a 
+                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['assigned_to' => request('assigned_to') === 'unassigned' ? null : 'unassigned'])) }}" 
+                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-rose-50/70 to-rose-100/40 hover:to-rose-100/70 border {{ request('assigned_to') === 'unassigned' ? 'border-rose-500 shadow-sm ring-2 ring-rose-500/20 bg-rose-50' : 'border-rose-200/70' }} transition-all flex flex-col justify-between"
+                title="Filter Unassigned Leads"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-semibold text-rose-800 uppercase tracking-wider">Unassigned</span>
+                    <span class="w-7 h-7 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
+                    </span>
+                </div>
+                <div class="mt-2.5 flex items-baseline justify-between">
+                    <span class="text-2xl font-black text-rose-950 font-heading tracking-tight">{{ number_format($stats['unassigned'] ?? 0) }}</span>
+                    <span class="text-[10px] font-semibold text-rose-700 bg-rose-100/80 px-1.5 py-0.5 rounded-md">
+                        Pending Assign
+                    </span>
+                </div>
+            </a>
+        </div>
+
         <!-- Filter Bar -->
-        <form method="GET" action="{{ route('admin.students.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-3 border-t border-slate-100">
+        <form method="GET" action="{{ route('admin.students.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2.5 pt-3 border-t border-slate-100">
             <!-- Search -->
             <div class="lg:col-span-2 relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -131,6 +234,15 @@
                     placeholder="Search name, father name, mobile, address..." 
                     class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white"
                 >
+            </div>
+
+            <!-- Source Filter -->
+            <div>
+                <select name="source_type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white" onchange="this.form.submit()">
+                    <option value="">All Lead Sources</option>
+                    <option value="web" {{ request('source_type') == 'web' ? 'selected' : '' }}>🌐 Web Registrations</option>
+                    <option value="admin" {{ request('source_type') == 'admin' ? 'selected' : '' }}>📁 Admin / Bulk Upload</option>
+                </select>
             </div>
 
             <!-- Status Filter -->
@@ -171,7 +283,7 @@
                 <button type="submit" class="w-full px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold border border-slate-200 transition">
                     Filter
                 </button>
-                @if(request()->hasAny(['search', 'status', 'qualification', 'assigned_to', 'priority']))
+                @if(request()->hasAny(['search', 'status', 'qualification', 'assigned_to', 'priority', 'source_type']))
                     <a href="{{ route('admin.students.index') }}" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 rounded-xl text-xs border border-slate-200 transition" title="Reset Filters">
                         <i class="fa-solid fa-rotate-left"></i>
                     </a>
@@ -258,7 +370,18 @@
                             </td>
                             <td class="py-3.5 px-3">
                                 <div>
-                                    <p class="font-bold text-slate-900 text-sm">{{ $student->name }}</p>
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <p class="font-bold text-slate-900 text-sm">{{ $student->name }}</p>
+                                        @if(in_array($student->source, ['Website Application Form', 'Contact Us Page', 'Website', 'Website Form', 'Online']))
+                                            <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" title="Source: {{ $student->source }}">
+                                                <i class="fa-solid fa-globe text-[8px]"></i> Web
+                                            </span>
+                                        @elseif($student->source)
+                                            <span class="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200" title="Source: {{ $student->source }}">
+                                                <i class="fa-solid fa-file-csv text-[8px]"></i> {{ Str::limit($student->source, 14) }}
+                                            </span>
+                                        @endif
+                                    </div>
                                     @if($student->father_name)
                                         <p class="text-[11px] text-slate-500">Father: <span class="text-slate-700 font-medium">{{ $student->father_name }}</span></p>
                                     @endif

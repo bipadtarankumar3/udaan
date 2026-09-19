@@ -75,22 +75,53 @@ class StudentController extends Controller
             }
         }
 
+        // Filter by Lead Source Category (Web vs Admin/Bulk)
+        if ($request->filled('source_type')) {
+            if ($request->source_type === 'web') {
+                $query->where(function($q) {
+                    $q->whereIn('source', ['Website Application Form', 'Contact Us Page', 'Website', 'Website Form', 'Online']);
+                });
+            } elseif ($request->source_type === 'admin') {
+                $query->where(function($q) {
+                    $q->whereNotIn('source', ['Website Application Form', 'Contact Us Page', 'Website', 'Website Form', 'Online'])
+                      ->orWhereNull('source');
+                });
+            }
+        }
+
+        // Calculate dynamic counts based on the active search / filter query
+        $stats = [
+            'total' => (clone $query)->count(),
+            'web_registered' => (clone $query)->whereIn('source', [
+                'Website Application Form', 
+                'Contact Us Page', 
+                'Website', 
+                'Website Form', 
+                'Online'
+            ])->count(),
+            'admin_uploaded' => (clone $query)->where(function($q) {
+                $q->whereNotIn('source', [
+                    'Website Application Form', 
+                    'Contact Us Page', 
+                    'Website', 
+                    'Website Form', 
+                    'Online'
+                ])->orWhereNull('source');
+            })->count(),
+            'assigned' => (clone $query)->whereNotNull('assigned_to')->count(),
+            'unassigned' => (clone $query)->whereNull('assigned_to')->count(),
+            'converted' => (clone $query)->where('status', 'Converted')->count(),
+        ];
+
         $students = $query->paginate(15)->withQueryString();
 
         // Telecallers for assignment dropdown
         $telecallers = User::role('Telecaller')->where('status', 'active')->orderBy('name')->get();
 
-        // Metrics for summary badges
-        $totalStudents = Student::count();
-        $unassignedStudents = Student::whereNull('assigned_to')->count();
-        $convertedStudents = Student::where('status', 'Converted')->count();
-
         return view('admin.students.index', compact(
             'students',
             'telecallers',
-            'totalStudents',
-            'unassignedStudents',
-            'convertedStudents'
+            'stats'
         ));
     }
 
