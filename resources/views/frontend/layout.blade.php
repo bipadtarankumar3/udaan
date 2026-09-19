@@ -30,7 +30,15 @@
       <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
       <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
       <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Udaan Foundation!" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-      <a href="{{ route('login') }}" class="staff-portal-btn" title="Staff Portal Login"><i class="fas fa-lock" style="font-size:11px;"></i> Staff Login</a>
+      @auth
+        @if(auth()->user()->hasRole(['Super Admin', 'Admin']))
+          <a href="{{ route('admin.dashboard') }}" class="staff-portal-btn" style="background:#FFA500 !important; color:#000 !important; font-weight:700;"><i class="fas fa-gauge-high"></i> Dashboard</a>
+        @else
+          <a href="{{ route('telecaller.dashboard') }}" class="staff-portal-btn" style="background:#FFA500 !important; color:#000 !important; font-weight:700;"><i class="fas fa-headset"></i> Dashboard</a>
+        @endif
+      @else
+        <a href="{{ route('login') }}" class="staff-portal-btn" title="Staff Portal Login"><i class="fas fa-lock" style="font-size:11px;"></i> Staff Login</a>
+      @endauth
     </div>
   </div>
 </div>
@@ -92,7 +100,15 @@
     <li><a href="{{ route('frontend.contact') }}">Contact</a></li>
     <li><a href="{{ route('frontend.services') }}">Services</a></li>
     <li><a href="{{ route('frontend.apply') }}" style="color:#FFA500;font-weight:700;">Apply Now</a></li>
-    <li><a href="{{ route('login') }}" style="color:#E51E25;font-weight:700;"><i class="fas fa-lock"></i> Staff Login</a></li>
+    @auth
+      @if(auth()->user()->hasRole(['Super Admin', 'Admin']))
+        <li><a href="{{ route('admin.dashboard') }}" style="color:#FFA500;font-weight:700;"><i class="fas fa-gauge-high"></i> Admin Dashboard</a></li>
+      @else
+        <li><a href="{{ route('telecaller.dashboard') }}" style="color:#FFA500;font-weight:700;"><i class="fas fa-headset"></i> My Dashboard</a></li>
+      @endif
+    @else
+      <li><a href="{{ route('login') }}" style="color:#E51E25;font-weight:700;"><i class="fas fa-lock"></i> Staff Login</a></li>
+    @endauth
   </ul>
 </div>
 
