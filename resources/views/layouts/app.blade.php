@@ -214,7 +214,7 @@
         @endif
 
         <!-- Clean White Topbar -->
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm">
+        <header class="relative z-30 h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 shadow-sm">
             <div class="flex items-center gap-3">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100">
                     <i class="fa-solid fa-bars text-lg"></i>
@@ -262,7 +262,7 @@
                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                         x-transition:leave-end="opacity-0 translate-y-1 scale-95"
                         x-cloak
-                        class="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 divide-y divide-slate-100"
+                        class="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200/90 rounded-2xl shadow-2xl py-2 z-50 divide-y divide-slate-100"
                     >
                         <!-- User Quick Info -->
                         <div class="px-4 py-2.5">
