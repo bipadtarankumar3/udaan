@@ -72,7 +72,7 @@ class StudentController extends Controller
             }
         }
 
-        $students = $query->paginate(15)->withQueryString();
+        $students = $query->paginate(10)->withQueryString();
 
         // Metrics for badges
         $metricsQuery = Student::query();

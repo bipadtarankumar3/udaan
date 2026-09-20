@@ -10,6 +10,8 @@
     bulkAssignModalOpen: false,
     editModalOpen: false,
     remarksModalOpen: false,
+    deleteModalOpen: false,
+    studentToDelete: { id: null, name: '', phone: '', city: '', course_interested: '' },
     selectedStudents: [],
     selectAll: false,
     currentStudent: { 
@@ -31,6 +33,11 @@
     },
     activeRemarksStudent: null,
     activeRemarksList: [],
+
+    openDeleteModal(student) {
+        this.studentToDelete = student;
+        this.deleteModalOpen = true;
+    },
 
     toggleSelectAll() {
         if (this.selectAll) {
@@ -504,13 +511,14 @@
                                         <i class="fa-regular fa-pen-to-square"></i>
                                     </button>
 
-                                    <form action="{{ route('admin.students.destroy', $student) }}" method="POST" onsubmit="return confirm('Delete student {{ $student->name }}?');" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-slate-100 rounded-lg transition" title="Delete Student">
-                                            <i class="fa-regular fa-trash-can"></i>
-                                        </button>
-                                    </form>
+                                    <button 
+                                        type="button" 
+                                        @click="openDeleteModal({{ json_encode($student) }})" 
+                                        class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer" 
+                                        title="Delete Student"
+                                    >
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -527,11 +535,14 @@
             </table>
         </div>
 
-        @if($students->hasPages())
-            <div class="p-4 border-t border-slate-100 bg-slate-50">
+        <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-slate-500">
+            <div>
+                Showing <span class="font-bold text-slate-800">{{ $students->firstItem() ?? 0 }}</span> to <span class="font-bold text-slate-800">{{ $students->lastItem() ?? 0 }}</span> of <span class="font-bold text-slate-800">{{ $students->total() }}</span> records (10 per page)
+            </div>
+            <div>
                 {{ $students->links() }}
             </div>
-        @endif
+        </div>
     </div>
 
     <!-- Modal 1: Apply / Add Student (Matching Bihar Students Form Fields) -->
@@ -987,6 +998,82 @@
                 <button type="button" @click="remarksModalOpen = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
                     Close
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Attractive Delete Confirmation Modal -->
+    <div 
+        x-show="deleteModalOpen" 
+        x-cloak 
+        class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    >
+        <div 
+            class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative transform transition-all text-center"
+            @click.outside="deleteModalOpen = false"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+        >
+            <!-- Warning Badge Icon -->
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-2xl shadow-inner mb-4">
+                <i class="fa-solid fa-trash-can animate-pulse"></i>
+            </div>
+
+            <h3 class="text-lg font-bold font-heading text-slate-900">Delete Student Lead?</h3>
+            <p class="text-xs text-slate-500 mt-1.5 px-2 leading-relaxed">
+                Are you sure you want to remove <strong class="text-slate-900 font-bold" x-text="studentToDelete?.name"></strong>? This record will be safely archived with a timestamp.
+            </p>
+
+            <!-- Student Summary Card -->
+            <div class="mt-4 p-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-left text-xs space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Student Name:</span>
+                    <span class="font-bold text-slate-900" x-text="studentToDelete?.name"></span>
+                </div>
+                <template x-if="studentToDelete?.phone">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400">Contact:</span>
+                        <span class="font-mono text-slate-700" x-text="studentToDelete?.phone"></span>
+                    </div>
+                </template>
+                <template x-if="studentToDelete?.course_interested">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400">Course:</span>
+                        <span class="text-slate-700 font-medium truncate max-w-[200px]" x-text="studentToDelete?.course_interested"></span>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex items-center justify-center gap-3">
+                <button 
+                    type="button" 
+                    @click="deleteModalOpen = false"
+                    class="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                    Cancel
+                </button>
+                <form :action="'/admin/students/' + studentToDelete?.id" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button 
+                        type="submit"
+                        class="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-red-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                        <span>Yes, Delete</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

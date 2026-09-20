@@ -7,6 +7,8 @@
 <div class="space-y-6" x-data="{ 
     createModalOpen: false, 
     editModalOpen: false,
+    deleteModalOpen: false,
+    roleToDelete: { id: null, name: '', users_count: 0 },
     currentRole: { id: null, name: '', permissions: [] },
     openEditModal(role) {
         this.currentRole = {
@@ -15,6 +17,14 @@
             permissions: role.permissions.map(p => p.name)
         };
         this.editModalOpen = true;
+    },
+    openDeleteModal(role) {
+        this.roleToDelete = {
+            id: role.id,
+            name: role.name,
+            users_count: role.users_count || 0
+        };
+        this.deleteModalOpen = true;
     }
 }">
 
@@ -44,7 +54,7 @@
                     <!-- Header -->
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl {{ $role->name === 'Super Admin' ? 'bg-red-50 text-red-600 border border-red-200' : ($role->name === 'Telecaller' ? 'bg-orange-50 text-orange-600 border border-orange-200' : 'bg-amber-50 text-amber-600 border border-amber-200') }} flex items-center justify-center text-lg">
+                            <div class="w-10 h-10 rounded-xl {{ in_array($role->name, ['Admin', 'Super Admin']) ? 'bg-red-50 text-red-600 border border-red-200' : ($role->name === 'Telecaller' ? 'bg-orange-50 text-orange-600 border border-orange-200' : 'bg-amber-50 text-amber-600 border border-amber-200') }} flex items-center justify-center text-lg">
                                 <i class="fa-solid {{ $role->name === 'Telecaller' ? 'fa-headset' : 'fa-shield-halved' }}"></i>
                             </div>
                             <div>
@@ -53,28 +63,27 @@
                             </div>
                         </div>
 
-                        @if(!in_array($role->name, ['Super Admin']))
-                            <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5">
+                            <button 
+                                type="button" 
+                                @click="openEditModal({{ json_encode($role) }})" 
+                                class="p-1.5 text-slate-400 hover:text-orange-600 hover:bg-slate-100 rounded-lg transition"
+                                title="Edit Role"
+                            >
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            
+                            @if(!in_array($role->name, ['Admin', 'Telecaller', 'Super Admin']))
                                 <button 
                                     type="button" 
-                                    @click="openEditModal({{ json_encode($role) }})" 
-                                    class="p-1.5 text-slate-400 hover:text-orange-600 hover:bg-slate-100 rounded-lg transition"
-                                    title="Edit Role"
+                                    @click="openDeleteModal({{ json_encode($role) }})" 
+                                    class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer" 
+                                    title="Delete Role"
                                 >
-                                    <i class="fa-regular fa-pen-to-square"></i>
+                                    <i class="fa-regular fa-trash-can"></i>
                                 </button>
-                                
-                                @if(!in_array($role->name, ['Admin', 'Telecaller']))
-                                    <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" onsubmit="return confirm('Delete role {{ $role->name }}?');" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-slate-100 rounded-lg transition" title="Delete Role">
-                                            <i class="fa-regular fa-trash-can"></i>
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Assigned Permissions -->
@@ -264,6 +273,74 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Delete Role Confirmation Modal -->
+    <div 
+        x-show="deleteModalOpen" 
+        x-cloak 
+        class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    >
+        <div 
+            class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative transform transition-all text-center"
+            @click.outside="deleteModalOpen = false"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+        >
+            <!-- Warning Badge Icon -->
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-2xl shadow-inner mb-4">
+                <i class="fa-solid fa-shield-halved animate-pulse"></i>
+            </div>
+
+            <h3 class="text-lg font-bold font-heading text-slate-900">Delete Custom Role?</h3>
+            <p class="text-xs text-slate-500 mt-1.5 px-2 leading-relaxed">
+                Are you sure you want to delete role <strong class="text-slate-900 font-bold" x-text="roleToDelete?.name"></strong>?
+            </p>
+
+            <!-- Role Summary Card -->
+            <div class="mt-4 p-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-left text-xs space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Role Name:</span>
+                    <span class="font-bold text-slate-900" x-text="roleToDelete?.name"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Assigned Users:</span>
+                    <span class="font-semibold text-slate-700" x-text="roleToDelete?.users_count + ' member(s)'"></span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex items-center justify-center gap-3">
+                <button 
+                    type="button" 
+                    @click="deleteModalOpen = false"
+                    class="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                    Cancel
+                </button>
+                <form :action="'/admin/roles/' + roleToDelete?.id" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button 
+                        type="submit"
+                        class="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-red-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                        <span>Yes, Delete</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 

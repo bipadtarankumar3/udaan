@@ -35,7 +35,7 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->paginate(12)->withQueryString();
+        $users = $query->paginate(10)->withQueryString();
         $roles = Role::all();
 
         return view('admin.users.index', compact('users', 'roles'));
@@ -113,5 +113,50 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', "User '{$userName}' deleted successfully.");
+    }
+
+    /**
+     * Impersonate / Login as a staff member.
+     */
+    public function impersonate(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'You are already logged in as this user.');
+        }
+
+        // Save original admin ID in session
+        if (!session()->has('admin_impersonator_id')) {
+            session(['admin_impersonator_id' => auth()->id()]);
+        }
+
+        auth()->login($user);
+
+        if ($user->isTelecaller()) {
+            return redirect()->route('telecaller.dashboard')->with('success', "Logged in as Staff: {$user->name}");
+        }
+
+        return redirect()->route('admin.dashboard')->with('success', "Logged in as {$user->name}");
+    }
+
+    /**
+     * Leave impersonation and switch back to Admin account.
+     */
+    public function leaveImpersonation()
+    {
+        if (!session()->has('admin_impersonator_id')) {
+            return redirect()->route('login');
+        }
+
+        $adminId = session('admin_impersonator_id');
+        $admin = User::find($adminId);
+
+        session()->forget('admin_impersonator_id');
+
+        if ($admin) {
+            auth()->login($admin);
+            return redirect()->route('admin.users.index')->with('success', "Switched back to Admin ({$admin->name}).");
+        }
+
+        return redirect()->route('login');
     }
 }

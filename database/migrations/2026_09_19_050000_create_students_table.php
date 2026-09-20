@@ -41,6 +41,7 @@ return new class extends Migration
             $table->text('current_remarks')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

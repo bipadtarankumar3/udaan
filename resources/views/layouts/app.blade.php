@@ -146,13 +146,6 @@
                         <i class="fa-solid fa-graduation-cap w-4 text-center {{ request()->routeIs('admin.students.*') ? 'text-white' : 'text-slate-400' }}"></i>
                         <span>Student Leads</span>
                     </div>
-                    {{-- Telecaller assignment count temporarily hidden --}}
-                    {{-- @php $unassigned = \App\Models\Student::whereNull('assigned_to')->count(); @endphp
-                    @if($unassigned > 0)
-                        <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ request()->routeIs('admin.students.*') ? 'bg-white/20 text-white' : 'bg-orange-100 text-orange-700' }}">
-                            {{ $unassigned }}
-                        </span>
-                    @endif --}}
                 </a>
 
             @else
@@ -204,6 +197,22 @@
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50">
         
+        @if(session()->has('admin_impersonator_id'))
+            <!-- Staff Impersonation Mode Banner -->
+            <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white px-4 sm:px-6 py-2 text-xs font-semibold flex items-center justify-between shadow-sm z-20">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-user-secret"></i>
+                    </div>
+                    <span>Staff View: <strong class="underline">{{ auth()->user()->name }}</strong> ({{ auth()->user()->roles->pluck('name')->first() ?? 'Telecaller' }})</span>
+                </div>
+                <a href="{{ route('impersonate.leave') }}" class="px-3 py-1 bg-white hover:bg-slate-100 text-red-700 font-bold rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Switch Back to Admin</span>
+                </a>
+            </div>
+        @endif
+
         <!-- Clean White Topbar -->
         <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shadow-sm">
             <div class="flex items-center gap-3">
@@ -219,17 +228,6 @@
 
             <!-- Topbar right actions -->
             <div class="flex items-center gap-2.5 sm:gap-3">
-                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-xs text-slate-700 font-medium">
-                    <i class="fa-regular fa-calendar text-orange-500"></i>
-                    <span>{{ now()->format('D, d M Y') }}</span>
-                </div>
-
-                <!-- Database status tag -->
-                <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>MAMP Active</span>
-                </div>
-
                 <!-- Top Right User Profile Dropdown -->
                 <div class="relative" x-data="{ profileMenuOpen: false }">
                     <button 
@@ -289,6 +287,13 @@
                                     <span>Admin Dashboard</span>
                                 </a>
                                 <a 
+                                    href="{{ route('admin.students.index') }}" 
+                                    class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-orange-600 transition"
+                                >
+                                    <i class="fa-solid fa-graduation-cap w-4 text-center text-slate-400"></i>
+                                    <span>Student Leads</span>
+                                </a>
+                                <a 
                                     href="{{ route('admin.users.index') }}" 
                                     class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-orange-600 transition"
                                 >
@@ -308,7 +313,7 @@
                                     class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-orange-600 transition"
                                 >
                                     <i class="fa-solid fa-chart-pie w-4 text-center text-slate-400"></i>
-                                    <span>Counselor Dashboard</span>
+                                    <span>My Dashboard</span>
                                 </a>
                                 <a 
                                     href="{{ route('telecaller.students.index') }}" 

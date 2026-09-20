@@ -113,7 +113,7 @@ class StudentController extends Controller
             'converted' => (clone $query)->where('status', 'Converted')->count(),
         ];
 
-        $students = $query->paginate(15)->withQueryString();
+        $students = $query->paginate(10)->withQueryString();
 
         // Telecallers for assignment dropdown
         $telecallers = User::role('Telecaller')->where('status', 'active')->orderBy('name')->get();

@@ -56,9 +56,9 @@ class RoleController extends Controller
             'permissions.*' => ['string', 'exists:permissions,name'],
         ]);
 
-        // Guard Super Admin name change if needed
-        if ($role->name === 'Super Admin' && $validated['name'] !== 'Super Admin') {
-            return back()->with('error', 'Super Admin role name cannot be modified.');
+        // Guard default system role name changes if needed
+        if (in_array($role->name, ['Admin', 'Telecaller']) && $validated['name'] !== $role->name) {
+            return back()->with('error', "Default system role '{$role->name}' name cannot be modified.");
         }
 
         $role->update(['name' => $validated['name']]);
@@ -72,7 +72,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        if (in_array($role->name, ['Super Admin', 'Admin', 'Telecaller'])) {
+        if (in_array($role->name, ['Admin', 'Telecaller', 'Super Admin'])) {
             return back()->with('error', "Default system role '{$role->name}' cannot be deleted.");
         }
 

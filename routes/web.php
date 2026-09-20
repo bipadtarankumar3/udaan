@@ -50,6 +50,7 @@ Route::prefix('admin')
         Route::resource('roles', AdminRoleController::class)->except(['create', 'show', 'edit']);
 
         // User Management
+        Route::post('/users/{user}/impersonate', [AdminUserController::class, 'impersonate'])->name('users.impersonate');
         Route::resource('users', AdminUserController::class)->except(['create', 'show', 'edit']);
 
         // Students Management
@@ -59,6 +60,11 @@ Route::prefix('admin')
         Route::post('/students/{student}/remark', [AdminStudentController::class, 'addRemark'])->name('students.add-remark');
         Route::resource('students', AdminStudentController::class);
     });
+
+// Leave Staff Impersonation Mode
+Route::match(['get', 'post'], '/impersonate/leave', [AdminUserController::class, 'leaveImpersonation'])
+    ->middleware('auth')
+    ->name('impersonate.leave');
 
 // ==========================================
 // Telecaller Module Routes

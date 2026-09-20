@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Super Admin
+        // Admin
         $admin = User::firstOrCreate(
             ['email' => 'admin@uddan.com'],
             [
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $admin->syncRoles(['Super Admin']);
+        $admin->syncRoles(['Admin']);
 
         // Telecaller 1 - Priya Sharma
         $telecaller1 = User::firstOrCreate(

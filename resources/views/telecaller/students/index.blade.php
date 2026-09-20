@@ -282,11 +282,14 @@
             </table>
         </div>
 
-        @if($students->hasPages())
-            <div class="p-4 border-t border-slate-100 bg-slate-50">
+        <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-slate-500">
+            <div>
+                Showing <span class="font-bold text-slate-800">{{ $students->firstItem() ?? 0 }}</span> to <span class="font-bold text-slate-800">{{ $students->lastItem() ?? 0 }}</span> of <span class="font-bold text-slate-800">{{ $students->total() }}</span> leads (10 per page)
+            </div>
+            <div>
                 {{ $students->links() }}
             </div>
-        @endif
+        </div>
     </div>
 
     <!-- Modal 1: Log Call & Submit Remark -->

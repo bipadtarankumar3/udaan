@@ -33,24 +33,25 @@ class RoleAndPermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $name], ['guard_name' => 'web']);
         }
 
-        // Create Roles and assign permissions
-        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
-        $superAdminRole->syncPermissions(Permission::all());
-
+        // 1. Admin Role (All Access / All Permissions)
         $adminRole = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
-        $adminRole->syncPermissions([
-            'manage-users',
-            'manage-students',
-            'bulk-upload-students',
-            'assign-students',
-            'view-all-remarks',
-            'log-remarks',
-        ]);
+        $adminRole->syncPermissions(Permission::all());
 
+        // 2. Telecaller Role (telecaller-access and log-remarks)
         $telecallerRole = Role::firstOrCreate(['name' => 'Telecaller', 'guard_name' => 'web']);
         $telecallerRole->syncPermissions([
             'telecaller-access',
             'log-remarks',
         ]);
+
+        // Clean up & migrate any users with Super Admin to Admin
+        $superAdminRole = Role::where('name', 'Super Admin')->first();
+        if ($superAdminRole) {
+            foreach ($superAdminRole->users as $u) {
+                $u->assignRole('Admin');
+                $u->removeRole('Super Admin');
+            }
+            $superAdminRole->delete();
+        }
     }
 }

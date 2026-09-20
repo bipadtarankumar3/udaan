@@ -187,14 +187,19 @@
                                     {{ $conversionRate }}%
                                 </td>
                                 <td class="py-3.5 text-right pr-3">
-                                    <a 
-                                        href="{{ route('telecaller.dashboard', ['user_id' => $t->id]) }}" 
-                                        class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-semibold transition"
-                                        title="View {{ $t->name }}'s Workspace"
-                                    >
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                                        <span>View Dashboard</span>
-                                    </a>
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <form action="{{ route('admin.users.impersonate', $t->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button 
+                                                type="submit" 
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-gradient-to-r hover:from-red-600 hover:via-orange-600 hover:to-amber-600 hover:text-white text-orange-700 border border-orange-200 text-xs font-bold transition shadow-sm cursor-pointer group"
+                                                title="Login as {{ $t->name }}"
+                                            >
+                                                <i class="fa-solid fa-right-to-bracket text-orange-600 group-hover:text-white transition text-[10px]"></i>
+                                                <span>Login as Staff</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

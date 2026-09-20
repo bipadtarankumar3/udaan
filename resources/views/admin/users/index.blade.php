@@ -7,6 +7,8 @@
 <div class="space-y-6" x-data="{
     createModalOpen: false,
     editModalOpen: false,
+    deleteModalOpen: false,
+    userToDelete: { id: null, name: '', email: '', role: '' },
     currentUser: { id: null, name: '', email: '', phone: '', role: '', status: 'active' },
     openEditModal(user) {
         this.currentUser = {
@@ -18,6 +20,15 @@
             status: user.status
         };
         this.editModalOpen = true;
+    },
+    openDeleteModal(user) {
+        this.userToDelete = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.roles && user.roles.length ? user.roles[0].name : 'Staff'
+        };
+        this.deleteModalOpen = true;
     }
 }">
 
@@ -118,7 +129,7 @@
                         <tr class="hover:bg-slate-50/80 transition">
                             <td class="py-3.5 pl-5">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full {{ $roleName === 'Super Admin' ? 'bg-red-50 text-red-600 border border-red-200' : ($roleName === 'Telecaller' ? 'bg-orange-50 text-orange-600 border border-orange-200' : 'bg-amber-50 text-amber-600 border border-amber-200') }} flex items-center justify-center font-bold text-xs uppercase">
+                                    <div class="w-9 h-9 rounded-full {{ in_array($roleName, ['Admin', 'Super Admin']) ? 'bg-red-50 text-red-600 border border-red-200' : ($roleName === 'Telecaller' ? 'bg-orange-50 text-orange-600 border border-orange-200' : 'bg-amber-50 text-amber-600 border border-amber-200') }} flex items-center justify-center font-bold text-xs uppercase">
                                         {{ substr($user->name, 0, 2) }}
                                     </div>
                                     <div>
@@ -128,7 +139,7 @@
                                 </div>
                             </td>
                             <td class="py-3.5 px-4">
-                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider {{ $roleName === 'Super Admin' ? 'bg-red-50 text-red-700 border border-red-200' : ($roleName === 'Telecaller' ? 'bg-orange-50 text-orange-700 border border-orange-200' : 'bg-amber-50 text-amber-700 border border-amber-200') }}">
+                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider {{ in_array($roleName, ['Admin', 'Super Admin']) ? 'bg-red-50 text-red-700 border border-red-200' : ($roleName === 'Telecaller' ? 'bg-orange-50 text-orange-700 border border-orange-200' : 'bg-amber-50 text-amber-700 border border-amber-200') }}">
                                     <i class="fa-solid {{ $roleName === 'Telecaller' ? 'fa-headset' : 'fa-shield' }} mr-1"></i>
                                     {{ $roleName }}
                                 </span>
@@ -161,15 +172,18 @@
                             </td>
                             <td class="py-3.5 pr-5 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    @if($roleName === 'Telecaller')
-                                        <a 
-                                            href="{{ route('telecaller.dashboard', ['user_id' => $user->id]) }}" 
-                                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-semibold transition" 
-                                            title="Visit {{ $user->name }}'s Dashboard"
-                                        >
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                                            <span>Dashboard</span>
-                                        </a>
+                                    @if($user->id !== auth()->id())
+                                        <form action="{{ route('admin.users.impersonate', $user) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button 
+                                                type="submit" 
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-gradient-to-r hover:from-red-600 hover:via-orange-600 hover:to-amber-600 hover:text-white text-orange-700 border border-orange-200 text-xs font-bold transition shadow-sm cursor-pointer group"
+                                                title="Login as {{ $user->name }}"
+                                            >
+                                                <i class="fa-solid fa-right-to-bracket text-orange-600 group-hover:text-white transition"></i>
+                                                <span>Login as Staff</span>
+                                            </button>
+                                        </form>
                                     @endif
 
                                     <button 
@@ -182,13 +196,14 @@
                                     </button>
 
                                     @if($user->id !== auth()->id())
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Delete user {{ $user->name }}?');" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-slate-100 rounded-lg transition" title="Delete User">
-                                                <i class="fa-regular fa-trash-can text-sm"></i>
-                                            </button>
-                                        </form>
+                                        <button 
+                                            type="button" 
+                                            @click="openDeleteModal({{ json_encode($user) }})" 
+                                            class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer" 
+                                            title="Delete User"
+                                        >
+                                            <i class="fa-regular fa-trash-can text-sm"></i>
+                                        </button>
                                     @endif
                                 </div>
                             </td>
@@ -205,11 +220,14 @@
             </table>
         </div>
 
-        @if($users->hasPages())
-            <div class="p-4 border-t border-slate-100 bg-slate-50">
+        <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-slate-500">
+            <div>
+                Showing <span class="font-bold text-slate-800">{{ $users->firstItem() ?? 0 }}</span> to <span class="font-bold text-slate-800">{{ $users->lastItem() ?? 0 }}</span> of <span class="font-bold text-slate-800">{{ $users->total() }}</span> staff members (10 per page)
+            </div>
+            <div>
                 {{ $users->links() }}
             </div>
-        @endif
+        </div>
     </div>
 
     <!-- Create User Modal -->
@@ -387,6 +405,78 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Delete User Confirmation Modal -->
+    <div 
+        x-show="deleteModalOpen" 
+        x-cloak 
+        class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    >
+        <div 
+            class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative transform transition-all text-center"
+            @click.outside="deleteModalOpen = false"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+        >
+            <!-- Warning Badge Icon -->
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-2xl shadow-inner mb-4">
+                <i class="fa-solid fa-user-xmark animate-pulse"></i>
+            </div>
+
+            <h3 class="text-lg font-bold font-heading text-slate-900">Remove Staff Member?</h3>
+            <p class="text-xs text-slate-500 mt-1.5 px-2 leading-relaxed">
+                Are you sure you want to remove <strong class="text-slate-900 font-bold" x-text="userToDelete?.name"></strong>? This account will be safely archived with a timestamp.
+            </p>
+
+            <!-- User Summary Card -->
+            <div class="mt-4 p-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-left text-xs space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Staff Name:</span>
+                    <span class="font-bold text-slate-900" x-text="userToDelete?.name"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Email:</span>
+                    <span class="font-mono text-slate-700" x-text="userToDelete?.email"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400">Role:</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-orange-100 text-orange-700 uppercase" x-text="userToDelete?.role"></span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex items-center justify-center gap-3">
+                <button 
+                    type="button" 
+                    @click="deleteModalOpen = false"
+                    class="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                    Cancel
+                </button>
+                <form :action="'/admin/users/' + userToDelete?.id" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button 
+                        type="submit"
+                        class="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-red-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                        <span>Yes, Delete</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
