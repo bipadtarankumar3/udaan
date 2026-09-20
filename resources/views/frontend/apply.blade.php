@@ -39,8 +39,9 @@
     height: 4px;
     background: linear-gradient(90deg, #E51E25, #F37021, #F8971D);
   }
-  .form-card-header h2 { font-size: 22px; margin: 0 0 4px; font-weight: 700; }
-  .form-card-header p  { margin: 0; opacity: 0.9; font-size: 13.5px; }
+  .form-card-header h2 { font-size: 22px; margin: 0 0 4px; font-weight: 700; color: #ffffff; }
+  .form-card-header h2 i { color: #ffffff; }
+  .form-card-header p  { margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 13.5px; }
   .form-card-body { padding: 32px 30px; }
 
   .form-grid-2 {
