@@ -122,11 +122,98 @@ class FrontendController extends Controller
     }
 
     /**
-     * News & Media.
+     * News & Media - Dynamic Listing & Category Filtering.
      */
-    public function news()
+    public function news(Request $request)
     {
-        return view('frontend.news');
+        $selectedCategory = null;
+        $searchQuery = $request->query('search');
+
+        $query = \App\Models\Post::with(['category', 'author'])->published()->latest('published_at');
+
+        // Category Filter
+        if ($request->filled('category')) {
+            $selectedCategory = \App\Models\Category::where('slug', $request->query('category'))->first();
+            if ($selectedCategory) {
+                $query->where('category_id', $selectedCategory->id);
+            }
+        }
+
+        // Search Filter
+        if (!empty($searchQuery)) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'like', "%{$searchQuery}%")
+                  ->orWhere('excerpt', 'like', "%{$searchQuery}%")
+                  ->orWhere('content', 'like', "%{$searchQuery}%");
+            });
+        }
+
+        // Spotlight / Hero Featured Post (Only when on main page without filters)
+        $featuredPost = null;
+        if (!$request->filled('category') && empty($searchQuery) && !$request->filled('page')) {
+            $featuredPost = \App\Models\Post::with(['category', 'author'])
+                ->published()
+                ->featured()
+                ->latest('published_at')
+                ->first();
+
+            // If found, exclude from regular stream
+            if ($featuredPost) {
+                $query->where('id', '!=', $featuredPost->id);
+            }
+        }
+
+        $posts = $query->paginate(6)->withQueryString();
+
+        // Categories with published count
+        $categories = \App\Models\Category::withCount('publishedPosts')
+            ->having('published_posts_count', '>', 0)
+            ->get();
+
+        // Recent Posts for Widget
+        $recentPosts = \App\Models\Post::published()
+            ->latest('published_at')
+            ->take(5)
+            ->get();
+
+        return view('frontend.news', compact('posts', 'featuredPost', 'categories', 'selectedCategory', 'searchQuery', 'recentPosts'));
+    }
+
+    /**
+     * Single News Post Details.
+     */
+    public function newsShow($slug)
+    {
+        $post = \App\Models\Post::with(['category', 'author'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Increment views counter
+        $post->increment('views_count');
+
+        // Related posts in same category
+        $relatedPosts = \App\Models\Post::published()
+            ->where('id', '!=', $post->id)
+            ->when($post->category_id, function ($q) use ($post) {
+                $q->where('category_id', $post->category_id);
+            })
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        // Categories with published count
+        $categories = \App\Models\Category::withCount('publishedPosts')
+            ->having('published_posts_count', '>', 0)
+            ->get();
+
+        // Recent posts
+        $recentPosts = \App\Models\Post::published()
+            ->where('id', '!=', $post->id)
+            ->latest('published_at')
+            ->take(5)
+            ->get();
+
+        return view('frontend.news-detail', compact('post', 'relatedPosts', 'categories', 'recentPosts'));
     }
 
     /**

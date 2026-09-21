@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -23,6 +25,7 @@ Route::name('frontend.')->group(function () {
     Route::get('/process', [FrontendController::class, 'process'])->name('process');
     Route::get('/enrollment', [FrontendController::class, 'enrollment'])->name('enrollment');
     Route::get('/news', [FrontendController::class, 'news'])->name('news');
+    Route::get('/news/{slug}', [FrontendController::class, 'newsShow'])->name('news.show');
     Route::get('/videos', [FrontendController::class, 'videos'])->name('videos');
     Route::get('/partners', [FrontendController::class, 'partners'])->name('partners');
     Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
@@ -59,6 +62,14 @@ Route::prefix('admin')
         Route::post('/students/bulk-assign', [AdminStudentController::class, 'bulkAssign'])->name('students.bulk-assign');
         Route::post('/students/{student}/remark', [AdminStudentController::class, 'addRemark'])->name('students.add-remark');
         Route::resource('students', AdminStudentController::class);
+
+        // Blog / News Post Management
+        Route::post('/posts/{post}/toggle-status', [AdminPostController::class, 'toggleStatus'])->name('posts.toggle-status');
+        Route::post('/posts/{post}/toggle-featured', [AdminPostController::class, 'toggleFeatured'])->name('posts.toggle-featured');
+        Route::resource('posts', AdminPostController::class);
+
+        // Category Management
+        Route::resource('categories', AdminCategoryController::class)->except(['create', 'show', 'edit']);
     });
 
 // Leave Staff Impersonation Mode

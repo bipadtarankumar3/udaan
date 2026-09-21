@@ -148,6 +148,32 @@
                     </div>
                 </a>
 
+                <!-- Content & News Section -->
+                <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Content & Media
+                </div>
+
+                <!-- 5. News & Posts -->
+                <a 
+                    href="{{ route('admin.posts.index') }}" 
+                    class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.posts.*') ? 'bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white shadow-md shadow-red-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}"
+                >
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-newspaper w-4 text-center {{ request()->routeIs('admin.posts.*') ? 'text-white' : 'text-slate-400' }}"></i>
+                        <span>News & Articles</span>
+                    </div>
+                </a>
+
+                <!-- 6. Categories -->
+                <a 
+                    href="{{ route('admin.categories.index') }}" 
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.categories.*') ? 'bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white shadow-md shadow-red-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}"
+                >
+                    <i class="fa-solid fa-folder-tree w-4 text-center {{ request()->routeIs('admin.categories.*') ? 'text-white' : 'text-slate-400' }}"></i>
+                    <span>Categories</span>
+                </a>
+
+
             @else
                 <!-- Telecaller Section -->
                 <div class="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
