@@ -186,7 +186,27 @@
                 </div>
             </a>
 
-            <!-- 4. Converted / Admitted Leads -->
+            <!-- 4. Unassigned Leads Card -->
+            <a 
+                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['assigned_to' => request('assigned_to') === 'unassigned' ? null : 'unassigned'])) }}" 
+                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-rose-50/70 to-rose-100/40 hover:to-rose-100/70 border {{ request('assigned_to') === 'unassigned' ? 'border-rose-500 shadow-sm ring-2 ring-rose-500/20 bg-rose-50' : 'border-rose-200/70' }} transition-all flex flex-col justify-between"
+                title="Filter Unassigned Leads (Need Telecaller)"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-[11px] font-semibold text-rose-800 uppercase tracking-wider">Unassigned</span>
+                    <span class="w-7 h-7 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-headset"></i>
+                    </span>
+                </div>
+                <div class="mt-2.5 flex items-baseline justify-between">
+                    <span class="text-2xl font-black text-rose-950 font-heading tracking-tight">{{ number_format($stats['unassigned'] ?? 0) }}</span>
+                    <span class="text-[10px] font-semibold text-rose-700 bg-rose-100/80 px-1.5 py-0.5 rounded-md">
+                        Needs Action
+                    </span>
+                </div>
+            </a>
+
+            <!-- 5. Converted / Admitted Leads -->
             <a 
                 href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['status' => request('status') === 'Converted' ? null : 'Converted'])) }}" 
                 class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-amber-50/70 to-amber-100/40 hover:to-amber-100/70 border {{ request('status') === 'Converted' ? 'border-amber-500 shadow-sm ring-2 ring-amber-500/20 bg-amber-50' : 'border-amber-200/70' }} transition-all flex flex-col justify-between"
@@ -205,41 +225,7 @@
                     </span>
                 </div>
             </a>
-
-            {{-- Telecaller Assignment Cards (Temporarily hidden for client demo) --}}
-            {{--
-            <!-- Assigned Leads Card -->
-            <a 
-                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['assigned_to' => (request('assigned_to') && request('assigned_to') !== 'unassigned') ? null : ''])) }}" 
-                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-amber-50/70 to-amber-100/40 hover:to-amber-100/70 border {{ (request('assigned_to') && request('assigned_to') !== 'unassigned') ? 'border-amber-500 shadow-sm ring-2 ring-amber-500/20 bg-amber-50' : 'border-amber-200/70' }} transition-all flex flex-col justify-between"
-            >
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-[11px] font-semibold text-amber-800 uppercase tracking-wider">Assigned</span>
-                    <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-headset"></i>
-                    </span>
-                </div>
-                <div class="mt-2.5 flex items-baseline justify-between">
-                    <span class="text-2xl font-black text-amber-950 font-heading tracking-tight">{{ number_format($stats['assigned'] ?? 0) }}</span>
-                </div>
-            </a>
-
-            <!-- Unassigned Leads Card -->
-            <a 
-                href="{{ route('admin.students.index', array_merge(request()->except(['page']), ['assigned_to' => request('assigned_to') === 'unassigned' ? null : 'unassigned'])) }}" 
-                class="group relative p-3.5 rounded-2xl bg-gradient-to-br from-rose-50/70 to-rose-100/40 hover:to-rose-100/70 border {{ request('assigned_to') === 'unassigned' ? 'border-rose-500 shadow-sm ring-2 ring-rose-500/20 bg-rose-50' : 'border-rose-200/70' }} transition-all flex flex-col justify-between"
-            >
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-[11px] font-semibold text-rose-800 uppercase tracking-wider">Unassigned</span>
-                    <span class="w-7 h-7 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-bolt"></i>
-                    </span>
-                </div>
-                <div class="mt-2.5 flex items-baseline justify-between">
-                    <span class="text-2xl font-black text-rose-950 font-heading tracking-tight">{{ number_format($stats['unassigned'] ?? 0) }}</span>
-                </div>
-            </a>
-            --}}
+        </div>
         </div>
 
         <!-- Filter Bar -->
@@ -316,8 +302,7 @@
         </form>
     </div>
 
-    {{-- Multi-Select Bulk Assignment Action Bar (Temporarily hidden for client demo) --}}
-    {{--
+    <!-- Multi-Select Bulk Assignment Action Bar -->
     <div 
         x-show="selectedStudents.length > 0" 
         x-cloak 
@@ -355,7 +340,6 @@
             </button>
         </form>
     </div>
-    --}}
 
     <!-- Students DataTable -->
     <div class="bg-white border border-slate-200/90 rounded-2xl shadow-sm overflow-hidden">
@@ -363,21 +347,21 @@
             <table class="w-full text-left text-xs">
                 <thead>
                     <tr class="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold">
-                        {{-- <th class="py-3.5 pl-4 w-10 text-center">
+                        <th class="py-3.5 pl-4 w-10 text-center">
                             <input 
                                 type="checkbox" 
                                 x-model="selectAll" 
                                 @change="toggleSelectAll()" 
                                 class="w-4 h-4 rounded border-slate-300 text-red-600 focus:ring-red-500"
                             >
-                        </th> --}}
+                        </th>
                         <th class="py-3.5 pl-4">Student & Father Name</th>
                         <th class="py-3.5 px-3">Mobile & WhatsApp</th>
                         <th class="py-3.5 px-3">DOB & Gender</th>
                         <th class="py-3.5 px-3">Qualification</th>
                         <th class="py-3.5 px-3">Address</th>
                         <th class="py-3.5 px-3 text-center">Status</th>
-                        {{-- <th class="py-3.5 px-3">Assigned Telecaller</th> --}}
+                        <th class="py-3.5 px-3">Assigned Telecaller</th>
                         <th class="py-3.5 px-3">Latest Remarks</th>
                         <th class="py-3.5 pr-4 text-right">Actions</th>
                     </tr>
@@ -385,7 +369,7 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($students as $student)
                         <tr class="hover:bg-slate-50 transition">
-                            {{-- <td class="py-3.5 pl-4 text-center">
+                            <td class="py-3.5 pl-4 text-center">
                                 <input 
                                     type="checkbox" 
                                     value="{{ $student->id }}" 
@@ -393,7 +377,7 @@
                                     @change="updateSelectAll()" 
                                     class="student-checkbox w-4 h-4 rounded border-slate-300 text-red-600 focus:ring-red-500"
                                 >
-                            </td> --}}
+                            </td>
                             <td class="py-3.5 pl-4">
                                 <div>
                                     <div class="flex items-center gap-1.5 flex-wrap">
@@ -447,8 +431,6 @@
                                     {{ $student->status }}
                                 </span>
                             </td>
-                            {{-- Telecaller column temporarily hidden for client demo --}}
-                            {{--
                             <td class="py-3.5 px-3">
                                 @if($student->assignedTelecaller)
                                     <div class="flex items-center gap-2">
@@ -466,7 +448,6 @@
                                     </span>
                                 @endif
                             </td>
-                            --}}
                             <td class="py-3.5 px-3 max-w-xs">
                                 @if($student->current_remarks)
                                     <p class="text-[11px] text-slate-700 truncate" title="{{ $student->current_remarks }}">
