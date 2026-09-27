@@ -98,6 +98,15 @@
             <!-- Action Buttons -->
             <div class="flex items-center flex-wrap gap-2.5">
                 <a 
+                    href="{{ route('admin.billings.index') }}" 
+                    class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition"
+                    title="Student Fee Receipts & Billing Invoices"
+                >
+                    <i class="fa-solid fa-file-invoice-dollar text-red-600"></i>
+                    <span>Fee Billing</span>
+                </a>
+
+                <a 
                     href="{{ route('admin.students.sample-csv') }}" 
                     class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition"
                     title="Download template for bulk upload"

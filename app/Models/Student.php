@@ -73,6 +73,14 @@ class Student extends Model
     }
 
     /**
+     * Student billing invoices and receipts.
+     */
+    public function bills(): HasMany
+    {
+        return $this->hasMany(StudentBill::class, 'student_id')->latest('billing_date');
+    }
+
+    /**
      * Status badge color class for clean light UI.
      */
     public function getStatusBadgeClassAttribute(): string

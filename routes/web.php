@@ -63,6 +63,11 @@ Route::prefix('admin')
         Route::post('/students/{student}/remark', [AdminStudentController::class, 'addRemark'])->name('students.add-remark');
         Route::resource('students', AdminStudentController::class);
 
+        // Student Billing & Invoices Management
+        Route::get('/billings/export-csv', [\App\Http\Controllers\Admin\StudentBillController::class, 'exportCsv'])->name('billings.export-csv');
+        Route::post('/billings/{billing}/record-payment', [\App\Http\Controllers\Admin\StudentBillController::class, 'recordPayment'])->name('billings.record-payment');
+        Route::resource('billings', \App\Http\Controllers\Admin\StudentBillController::class);
+
         // Blog / News Post Management
         Route::post('/posts/{post}/toggle-status', [AdminPostController::class, 'toggleStatus'])->name('posts.toggle-status');
         Route::post('/posts/{post}/toggle-featured', [AdminPostController::class, 'toggleFeatured'])->name('posts.toggle-featured');
