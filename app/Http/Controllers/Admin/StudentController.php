@@ -134,6 +134,7 @@ class StudentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'father_name' => ['nullable', 'string', 'max:255'],
             'dob' => ['nullable', 'date'],
+            'counselling_date' => ['nullable', 'date'],
             'phone' => ['required', 'string', 'max:20'],
             'whatsapp_no' => ['nullable', 'string', 'max:20'],
             'qualification' => ['nullable', 'string', 'max:100'],
@@ -147,6 +148,13 @@ class StudentController extends Controller
             'assigned_to' => ['nullable', 'exists:users,id'],
             'current_remarks' => ['nullable', 'string'],
         ]);
+
+        if (empty($validated['counselling_date'])) {
+            $validated['counselling_date'] = now()->addDays(2)->toDateString();
+        }
+        if (empty($validated['next_followup_at'])) {
+            $validated['next_followup_at'] = $validated['counselling_date'];
+        }
 
         if (!empty($validated['assigned_to'])) {
             $validated['assigned_at'] = now();
@@ -196,6 +204,7 @@ class StudentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'father_name' => ['nullable', 'string', 'max:255'],
             'dob' => ['nullable', 'date'],
+            'counselling_date' => ['nullable', 'date'],
             'phone' => ['required', 'string', 'max:20'],
             'whatsapp_no' => ['nullable', 'string', 'max:20'],
             'qualification' => ['nullable', 'string', 'max:100'],
@@ -210,7 +219,7 @@ class StudentController extends Controller
         ]);
 
         // Detect assignment change
-        if ($student->assigned_to != $validated['assigned_to']) {
+        if (array_key_exists('assigned_to', $validated) && $student->assigned_to != $validated['assigned_to']) {
             $validated['assigned_at'] = !empty($validated['assigned_to']) ? now() : null;
             $validated['assigned_by'] = !empty($validated['assigned_to']) ? auth()->id() : null;
         }
@@ -344,10 +353,24 @@ class StudentController extends Controller
                     }
                 }
 
+                // Format counselling_date if present, otherwise default to +2 days
+                $counsellingDate = trim($data['counselling_date'] ?? $data['counseling_date'] ?? '');
+                $parsedCounsellingDate = null;
+                if (!empty($counsellingDate)) {
+                    $cTimestamp = strtotime($counsellingDate);
+                    if ($cTimestamp !== false) {
+                        $parsedCounsellingDate = date('Y-m-d', $cTimestamp);
+                    }
+                }
+                if (!$parsedCounsellingDate) {
+                    $parsedCounsellingDate = now()->addDays(2)->toDateString();
+                }
+
                 $student = Student::create([
                     'name' => $name,
                     'father_name' => !empty($fatherName) ? $fatherName : null,
                     'dob' => $parsedDob,
+                    'counselling_date' => $parsedCounsellingDate,
                     'phone' => $phone,
                     'whatsapp_no' => !empty($whatsappNo) ? $whatsappNo : $phone,
                     'qualification' => !empty($qualification) ? $qualification : null,
@@ -361,6 +384,7 @@ class StudentController extends Controller
                     'assigned_to' => $defaultTelecallerId,
                     'assigned_at' => $defaultTelecallerId ? now() : null,
                     'assigned_by' => $defaultTelecallerId ? auth()->id() : null,
+                    'next_followup_at' => $parsedCounsellingDate,
                     'current_remarks' => !empty($remarks) ? $remarks : null,
                 ]);
 

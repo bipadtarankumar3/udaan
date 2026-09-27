@@ -19,6 +19,7 @@
         name: '', 
         father_name: '', 
         dob: '', 
+        counselling_date: '',
         phone: '', 
         whatsapp_no: '', 
         qualification: '', 
@@ -56,6 +57,7 @@
             name: student.name,
             father_name: student.father_name || '',
             dob: student.dob ? student.dob.substring(0, 10) : '',
+            counselling_date: student.counselling_date ? student.counselling_date.substring(0, 10) : (student.next_followup_at ? student.next_followup_at.substring(0, 10) : ''),
             phone: student.phone,
             whatsapp_no: student.whatsapp_no || '',
             qualification: student.qualification || '',
@@ -226,7 +228,6 @@
                 </div>
             </a>
         </div>
-        </div>
 
         <!-- Filter Bar -->
         <form method="GET" action="{{ route('admin.students.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-3 border-t border-slate-100">
@@ -357,7 +358,7 @@
                         </th>
                         <th class="py-3.5 pl-4">Student & Father Name</th>
                         <th class="py-3.5 px-3">Mobile & WhatsApp</th>
-                        <th class="py-3.5 px-3">DOB & Gender</th>
+                        <th class="py-3.5 px-3">Counselling &amp; DOB</th>
                         <th class="py-3.5 px-3">Qualification</th>
                         <th class="py-3.5 px-3">Address</th>
                         <th class="py-3.5 px-3 text-center">Status</th>
@@ -414,8 +415,13 @@
                                 @endif
                             </td>
                             <td class="py-3.5 px-3">
-                                <p class="text-slate-700">{{ $student->dob ? $student->dob->format('d M Y') : '—' }}</p>
-                                <p class="text-[11px] text-slate-500">{{ $student->gender ?? '—' }}</p>
+                                <div class="flex items-center gap-1.5 text-slate-900 font-bold" title="Counselling Date">
+                                    <i class="fa-regular fa-calendar-check text-orange-600 text-[11px]"></i>
+                                    <span>{{ $student->counselling_date ? $student->counselling_date->format('d M Y') : ($student->created_at ? $student->created_at->addDays(2)->format('d M Y') : '—') }}</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-0.5">
+                                    DOB: {{ $student->dob ? $student->dob->format('d M Y') : '—' }} ({{ $student->gender ?? '—' }})
+                                </p>
                             </td>
                             <td class="py-3.5 px-3">
                                 <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-200 font-medium text-[11px]">
@@ -632,13 +638,22 @@
                 </div>
 
                 <!-- Extra CRM & Assignment Row -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Counselling Date: <span class="text-orange-600 font-normal text-[11px]">(Default +2 Days)</span>
+                        </label>
+                        <input type="date" name="counselling_date" value="{{ now()->addDays(2)->format('Y-m-d') }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
+                    </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                             Course / Stream Interested
                         </label>
-                        <input type="text" name="course_interested" placeholder="e.g. B.Tech, Nursing, BCA" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
+                        <input type="text" name="course_interested" placeholder="e.g. B.Tech, Nursing, BCA" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
                     </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                             Lead Source
@@ -831,6 +846,22 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Address</label>
                         <input type="text" name="address" x-model="currentStudent.address" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
+                    </div>
+                </div>
+
+                <!-- Row 4.5: Counselling Date & Course -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Counselling Date
+                        </label>
+                        <input type="date" name="counselling_date" x-model="currentStudent.counselling_date" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Course / Stream Interested
+                        </label>
+                        <input type="text" name="course_interested" x-model="currentStudent.course_interested" placeholder="e.g. B.Tech, Nursing, BCA" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
                     </div>
                 </div>
 

@@ -70,9 +70,8 @@ class FrontendTest extends TestCase
 
         $response = $this->post('/apply', $postData);
 
-        $response->assertRedirect(route('frontend.confirmation', ['id' => 1]));
+        $response->assertRedirect(route('frontend.confirmation', ['search' => '9876543210']));
         $response->assertSessionHas('success');
-        $response->assertSessionHas('student');
 
         $this->assertDatabaseHas('students', [
             'name' => 'Amit Verma',
@@ -85,6 +84,9 @@ class FrontendTest extends TestCase
             'source' => 'Website Application Form',
             'status' => 'New',
         ]);
+
+        $createdStudent = Student::first();
+        $this->assertEquals(now()->addDays(2)->toDateString(), $createdStudent->counselling_date->toDateString());
     }
 
     /**
@@ -112,5 +114,56 @@ class FrontendTest extends TestCase
             'source' => 'Contact Us Page',
             'status' => 'New',
         ]);
+    }
+
+    /**
+     * Test counselling letter default view shows search and no letter.
+     */
+    public function test_counselling_letter_default_view_shows_search_only(): void
+    {
+        Student::create([
+            'name' => 'Rohan Kumar',
+            'phone' => '9876543211',
+            'dob' => '1996-06-06',
+        ]);
+
+        $response = $this->get('/confirmation');
+        $response->assertStatus(200);
+        $response->assertSee('Verify / Download Counselling Letter');
+        $response->assertSee('Search Your Counselling Letter');
+        // By default, student letter details should not be shown
+        $response->assertDontSee('Counselling Date:');
+    }
+
+    /**
+     * Test counselling letter search shows dynamic candidate details.
+     */
+    public function test_counselling_letter_search_by_phone_shows_details(): void
+    {
+        $student = Student::create([
+            'name' => 'Rohan Sharma',
+            'phone' => '9876543211',
+            'dob' => '1996-06-06',
+        ]);
+
+        $response = $this->get('/confirmation?search=9876543211');
+        $response->assertStatus(200);
+        $response->assertSee('Counselling Letter');
+        $response->assertSee('Rohan Sharma');
+        $response->assertSee('6/6/1996');
+        $response->assertSee('10:00 AM to 04:00 PM.');
+        $response->assertSee('Combined Counselling Board');
+        $response->assertSee('BIHAR STUDENT COUNSELLING CENTER');
+    }
+
+    /**
+     * Test counselling letter search with invalid phone shows not found message.
+     */
+    public function test_counselling_letter_search_not_found(): void
+    {
+        $response = $this->get('/confirmation?search=1111111111');
+        $response->assertStatus(200);
+        $response->assertSee('No registration record found');
+        $response->assertDontSee('Counselling Date:');
     }
 }

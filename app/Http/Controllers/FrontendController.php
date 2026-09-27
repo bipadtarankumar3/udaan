@@ -42,11 +42,15 @@ class FrontendController extends Controller
         // Standardize gender
         $gender = ucfirst(strtolower($validated['gender']));
 
+        // Calculate counselling date (+2 days from submission)
+        $counsellingDate = now()->addDays(2);
+
         // Create student lead record
         $student = Student::create([
             'name' => $validated['name'],
             'father_name' => $validated['father_name'],
             'dob' => $validated['dob'],
+            'counselling_date' => $counsellingDate->toDateString(),
             'phone' => $validated['phone'],
             'whatsapp_no' => $validated['whatsapp_no'],
             'qualification' => $validated['qualification'],
@@ -55,14 +59,13 @@ class FrontendController extends Controller
             'source' => 'Website Application Form',
             'status' => 'New',
             'priority' => 'Medium',
+            'next_followup_at' => $counsellingDate,
             'current_remarks' => 'Application submitted online via Udaan Foundation website.',
         ]);
 
-        session(['student_id' => $student->id]);
-
-        return redirect()->route('frontend.confirmation', ['id' => $student->id])->with([
+        // Redirect with search parameter so student sees their letter immediately with success message
+        return redirect()->route('frontend.confirmation', ['search' => $student->phone])->with([
             'success' => 'Your application has been successfully submitted! Our admission counselor will contact you shortly.',
-            'student' => $student,
             'ref_no' => 'UDD-2025-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
         ]);
     }
@@ -75,26 +78,53 @@ class FrontendController extends Controller
         $student = null;
         $searchQuery = $request->query('search') ?? $request->query('phone') ?? $request->query('ref');
 
-        if ($request->filled('id')) {
-            $student = Student::find($request->query('id'));
-        } elseif (!empty($searchQuery)) {
+        if (!empty($searchQuery)) {
             $cleanQuery = preg_replace('/[^0-9]/', '', $searchQuery);
-            $student = Student::where('phone', 'like', "%{$cleanQuery}%")
-                ->orWhere('whatsapp_no', 'like', "%{$cleanQuery}%")
-                ->orWhere('id', intval($cleanQuery))
-                ->latest()
-                ->first();
-        } elseif (session()->has('student')) {
-            $student = session('student');
-        } elseif (session()->has('student_id')) {
-            $student = Student::find(session('student_id'));
-        } else {
-            $student = Student::latest()->first();
+            if (!empty($cleanQuery)) {
+                $student = Student::where('phone', 'like', "%{$cleanQuery}%")
+                    ->orWhere('whatsapp_no', 'like', "%{$cleanQuery}%")
+                    ->orWhere('alt_phone', 'like', "%{$cleanQuery}%")
+                    ->orWhere('id', intval($cleanQuery))
+                    ->latest()
+                    ->first();
+            }
+        } elseif ($request->filled('id')) {
+            $student = Student::find($request->query('id'));
         }
 
-        $refNo = $student ? 'UDD-2025-' . str_pad($student->id, 5, '0', STR_PAD_LEFT) : 'UDD-2025-00001';
+        // Forget any legacy session keys so navigating menu/back requires searching by phone
+        session()->forget(['student_id', 'student']);
 
-        return view('frontend.confirmation', compact('student', 'refNo', 'searchQuery'));
+        $refNo = $student ? 'UDD-2025-' . str_pad($student->id, 5, '0', STR_PAD_LEFT) : null;
+
+        // Dynamic Counselling Date and Time
+        $counsellingDate = '';
+        $counsellingTime = '10:00 AM to 04:00 PM.';
+        $dobFormatted = '';
+
+        if ($student) {
+            if (!empty($student->counselling_date)) {
+                $counsellingDate = \Carbon\Carbon::parse($student->counselling_date)->format('j/n/Y');
+            } elseif (!empty($student->next_followup_at)) {
+                $counsellingDate = \Carbon\Carbon::parse($student->next_followup_at)->format('j/n/Y');
+            } elseif ($student->created_at) {
+                $counsellingDate = $student->created_at->addDays(2)->format('j/n/Y');
+            } else {
+                $counsellingDate = now()->addDays(2)->format('j/n/Y');
+            }
+
+            if (!empty($student->next_followup_at) && \Carbon\Carbon::parse($student->next_followup_at)->format('H:i') !== '00:00') {
+                $counsellingTime = \Carbon\Carbon::parse($student->next_followup_at)->format('h:i A');
+            }
+
+            if (!empty($student->dob)) {
+                $dobFormatted = \Carbon\Carbon::parse($student->dob)->format('j/n/Y');
+            } else {
+                $dobFormatted = 'As per 10th Certificate';
+            }
+        }
+
+        return view('frontend.confirmation', compact('student', 'refNo', 'searchQuery', 'counsellingDate', 'counsellingTime', 'dobFormatted'));
     }
 
     /**
@@ -166,8 +196,8 @@ class FrontendController extends Controller
         $posts = $query->paginate(6)->withQueryString();
 
         // Categories with published count
-        $categories = \App\Models\Category::withCount('publishedPosts')
-            ->having('published_posts_count', '>', 0)
+        $categories = \App\Models\Category::has('publishedPosts')
+            ->withCount('publishedPosts')
             ->get();
 
         // Recent Posts for Widget
@@ -202,8 +232,8 @@ class FrontendController extends Controller
             ->get();
 
         // Categories with published count
-        $categories = \App\Models\Category::withCount('publishedPosts')
-            ->having('published_posts_count', '>', 0)
+        $categories = \App\Models\Category::has('publishedPosts')
+            ->withCount('publishedPosts')
             ->get();
 
         // Recent posts

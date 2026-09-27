@@ -16,6 +16,7 @@ class Student extends Model
         'name',
         'father_name',
         'dob',
+        'counselling_date',
         'phone',
         'whatsapp_no',
         'qualification',
@@ -40,6 +41,7 @@ class Student extends Model
     {
         return [
             'dob' => 'date',
+            'counselling_date' => 'date',
             'assigned_at' => 'datetime',
             'last_contacted_at' => 'datetime',
             'next_followup_at' => 'datetime',
