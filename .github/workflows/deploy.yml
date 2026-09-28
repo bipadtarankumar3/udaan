@@ -60,9 +60,9 @@ jobs:
               sleep 2
             done
 
-            # 5. Run Laravel migrations and optimization commands
-            echo "Running migrations and caching..."
-            docker compose exec -T app php artisan migrate --force
+            # 5. Run Laravel migrations, seeders, and optimization commands
+            echo "Running migrations, seeders, and caching..."
+            docker compose exec -T app php artisan migrate --force --seed
             docker compose exec -T app php artisan config:cache
             docker compose exec -T app php artisan route:cache
             docker compose exec -T app php artisan view:cache
