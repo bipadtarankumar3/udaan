@@ -50,8 +50,15 @@ jobs:
             docker compose up -d --build
 
             # 4. Wait for MySQL to become ready
-            echo "Waiting for database to initialize..."
-            sleep 10
+            echo "Waiting for database to accept connections..."
+            for i in $(seq 1 30); do
+              if docker compose exec -T mysql mysqladmin ping -h localhost -uroot -proot --silent > /dev/null 2>&1; then
+                echo "Database is ready!"
+                break
+              fi
+              echo "Waiting for MySQL to initialize ($i/30)..."
+              sleep 2
+            done
 
             # 5. Run Laravel migrations and optimization commands
             echo "Running migrations and caching..."

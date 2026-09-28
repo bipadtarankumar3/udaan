@@ -15,8 +15,7 @@ services:
     volumes:
       - storage_uploads:/var/www/html/storage/app/public
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     networks:
       - uddan_network
 
@@ -26,18 +25,11 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-uddan_db}
-      MYSQL_USER: ${DB_USERNAME:-root}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - uddan_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   db_data:
