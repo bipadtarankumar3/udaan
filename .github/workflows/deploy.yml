@@ -1,0 +1,63 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to AWS EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          envs: ENV_FILE
+          script: |
+            set -e
+
+            APP_DIR="/home/${{ secrets.EC2_USERNAME }}/uddan"
+
+            # 1. Create project directory or pull latest changes
+            if [ ! -d "$APP_DIR" ]; then
+              echo "Cloning repository..."
+              git clone https://github.com/${{ github.repository }}.git "$APP_DIR"
+              cd "$APP_DIR"
+            else
+              echo "Pulling latest changes..."
+              cd "$APP_DIR"
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+
+            # 2. Write .env from GitHub Secret
+            echo "Updating .env file..."
+            echo "$ENV_FILE" > .env
+
+            # 3. Build and restart Docker containers
+            echo "Building and starting Docker containers..."
+            docker compose down || true
+            docker compose up -d --build
+
+            # 4. Wait for MySQL to become ready
+            echo "Waiting for database to initialize..."
+            sleep 10
+
+            # 5. Run Laravel migrations and optimization commands
+            echo "Running migrations and caching..."
+            docker compose exec -T app php artisan migrate --force
+            docker compose exec -T app php artisan config:cache
+            docker compose exec -T app php artisan route:cache
+            docker compose exec -T app php artisan view:cache
+
+            echo "Deployment successfully completed! App is running at http://${{ secrets.EC2_HOST }}"
