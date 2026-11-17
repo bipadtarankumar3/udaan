@@ -254,11 +254,8 @@
                 <select id="qualification" name="qualification" required>
                   <option value="">Select Qualification</option>
                   <option value="10th" {{ old('qualification') == '10th' ? 'selected' : '' }}>10th</option>
-                  <option value="Appearing in 10th" {{ old('qualification') == 'Appearing in 10th' ? 'selected' : '' }}>Appearing in 10th</option>
                   <option value="12th" {{ old('qualification') == '12th' ? 'selected' : '' }}>12th</option>
-                  <option value="Appearing in 12th" {{ old('qualification') == 'Appearing in 12th' ? 'selected' : '' }}>Appearing in 12th</option>
-                  <option value="Graduation" {{ old('qualification') == 'Graduation' ? 'selected' : '' }}>Graduation</option>
-                  <option value="Appearing in Graduation" {{ old('qualification') == 'Appearing in Graduation' ? 'selected' : '' }}>Appearing in Graduation</option>
+                  <option value="Above this" {{ old('qualification') == 'Above this' ? 'selected' : '' }}>Above this</option>
                 </select>
               </div>
             </div>

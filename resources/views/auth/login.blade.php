@@ -29,7 +29,7 @@
         <!-- Top Branding Header -->
         <div class="relative z-10 flex items-center justify-between">
             <div class="inline-flex items-center gap-3 p-3 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/30">
-                <img src="{{ asset('logo.png') }}" alt="Uddan Educational Foundation" class="h-10 w-auto object-contain">
+                <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" class="h-10 w-auto object-contain">
             </div>
             
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/70 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-lg">
@@ -97,7 +97,7 @@
         <!-- Mobile Header (Visible only on small devices) -->
         <div class="lg:hidden text-center mb-6 pt-2">
             <div class="inline-flex items-center justify-center p-3 bg-white rounded-2xl shadow-sm border border-slate-200 mb-2">
-                <img src="{{ asset('logo.png') }}" alt="Uddan" class="h-10 w-auto">
+                <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" class="h-10 w-auto">
             </div>
             <p class="text-xs font-bold text-slate-700">Bihar Students Counselling Center Awareness Program</p>
         </div>

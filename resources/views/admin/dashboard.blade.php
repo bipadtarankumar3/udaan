@@ -14,7 +14,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10 pt-1">
             <div class="flex items-start gap-4">
                 <div class="p-2.5 bg-slate-50 rounded-2xl border border-slate-200 shrink-0 hidden sm:block">
-                    <img src="{{ asset('images/logo-icon.svg') }}" alt="Uddan" class="h-10 w-10">
+                    <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" class="h-10 w-10 object-contain">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">

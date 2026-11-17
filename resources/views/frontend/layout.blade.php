@@ -47,7 +47,7 @@
 <header class="header">
   <div class="header-top container">
     <a href="{{ route('frontend.index') }}" class="header-logo">
-      <img src="{{ asset('logo.png') }}" alt="Udaan Foundation Logo">
+      <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation Logo">
     </a>
     <button class="mobile-toggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
@@ -80,7 +80,7 @@
 <div class="mobile-nav-overlay"></div>
 <div class="mobile-nav">
   <div class="mobile-nav-header">
-    <img src="{{ asset('logo.png') }}" alt="Udaan Foundation" style="max-height: 45px;">
+    <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" style="max-height: 45px;">
     <button class="mobile-nav-close"><i class="fas fa-times"></i></button>
   </div>
   <ul>
@@ -120,7 +120,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="{{ asset('footer logo.png') }}" alt="Edu. Uddan Foundation" style="max-width:200px; height:auto; margin-bottom:15px;" onerror="this.src='{{ asset('logo.png') }}'">
+        <img src="{{ asset('footer logo.png') }}" alt="Vardhan Foundation" style="max-height:80px; width:auto; margin-bottom:15px;" onerror="this.src='{{ asset('logo.png') }}'">
         <p><strong>UDDAN IS AN UNIT OF EDU. UDDAN FOUNDATION</strong><br>We are dedicated to empowering lives and inspiring change through education, skill development, women empowerment, and community development programs across India.</p>
         <div class="footer-social">
           <a href="#"><i class="fab fa-facebook-f"></i></a>

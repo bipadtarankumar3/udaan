@@ -276,7 +276,7 @@
         <div class="inv-header">
             <!-- Logo Left -->
             <div class="inv-logo-left">
-                <img src="{{ asset('logo.png') }}" alt="Uddan Educational Foundation" style="max-height: 52px; width: auto; object-fit: contain;">
+                <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" style="max-height: 52px; width: auto; object-fit: contain;">
                 <div style="font-size: 7.5px; font-weight: 800; color: #475569; letter-spacing: 1px; margin-top: 4px; text-transform: uppercase;">
                     UDDAN EDUCATIONAL FOUNDATION
                 </div>

@@ -277,9 +277,9 @@
 
         <!-- Top Header -->
         <div class="cl-header">
-          <!-- Left: Udaan Foundation Logo & Tagline -->
+          <!-- Left: Vardhan Foundation Logo & Tagline -->
           <div class="cl-logo-box">
-            <img src="{{ asset('logo.png') }}" alt="Uddan Educational Foundation" style="max-height: 54px; width: auto; object-fit: contain;">
+            <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" style="max-height: 54px; width: auto; object-fit: contain;">
             <div style="font-size: 7.5px; font-weight: 800; color: #334155; letter-spacing: 1.2px; margin-top: 5px; text-transform: uppercase;">
               GUIDANCE &nbsp;|&nbsp; OPPORTUNITY &nbsp;|&nbsp; BRIGHTER FUTURE
             </div>

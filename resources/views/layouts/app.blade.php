@@ -94,7 +94,7 @@
         <!-- Logo Branding -->
         <div class="h-20 flex items-center justify-between px-4 border-b border-slate-100 bg-white">
             <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('telecaller.dashboard') }}" class="flex items-center gap-2">
-                <img src="{{ asset('images/logo.svg') }}" alt="Uddan Educational Foundation" class="h-10 w-auto object-contain">
+                <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" class="h-12 w-auto object-contain">
             </a>
             <button @click="sidebarOpen = false" class="lg:hidden text-slate-400 hover:text-slate-600 p-1">
                 <i class="fa-solid fa-xmark text-lg"></i>

@@ -277,6 +277,9 @@
             <div>
                 <select name="qualification" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white" onchange="this.form.submit()">
                     <option value="">All Qualifications</option>
+                    <option value="10th" {{ request('qualification') == '10th' ? 'selected' : '' }}>10th</option>
+                    <option value="12th" {{ request('qualification') == '12th' ? 'selected' : '' }}>12th</option>
+                    <option value="Above this" {{ request('qualification') == 'Above this' ? 'selected' : '' }}>Above this</option>
                     <option value="10th Pass" {{ request('qualification') == '10th Pass' ? 'selected' : '' }}>10th Pass</option>
                     <option value="12th Appearing" {{ request('qualification') == '12th Appearing' ? 'selected' : '' }}>12th Appearing</option>
                     <option value="12th Pass" {{ request('qualification') == '12th Pass' ? 'selected' : '' }}>12th Pass</option>
@@ -612,6 +615,9 @@
                         </label>
                         <select name="qualification" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
                             <option value="">Select Qualification</option>
+                            <option value="10th">10th</option>
+                            <option value="12th">12th</option>
+                            <option value="Above this">Above this</option>
                             <option value="10th Pass">10th Pass</option>
                             <option value="12th Appearing">12th Appearing</option>
                             <option value="12th Pass">12th Pass (Science)</option>
@@ -831,6 +837,9 @@
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Qualification</label>
                         <select name="qualification" x-model="currentStudent.qualification" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white">
                             <option value="">Select Qualification</option>
+                            <option value="10th">10th</option>
+                            <option value="12th">12th</option>
+                            <option value="Above this">Above this</option>
                             <option value="10th Pass">10th Pass</option>
                             <option value="12th Appearing">12th Appearing</option>
                             <option value="12th Pass">12th Pass</option>
