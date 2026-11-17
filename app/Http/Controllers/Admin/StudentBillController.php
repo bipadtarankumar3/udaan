@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\College;
 use App\Models\Student;
 use App\Models\StudentBill;
 use Illuminate\Http\Request;
@@ -15,9 +16,9 @@ class StudentBillController extends Controller
      */
     public function index(Request $request)
     {
-        $query = StudentBill::with(['student', 'creator'])->latest('billing_date')->latest('id');
+        $query = StudentBill::with(['student', 'creator', 'college'])->latest('billing_date')->latest('id');
 
-        // Search by Invoice No, Student Name, Phone, Email, Transaction ID, Course
+        // Search by Invoice No, Student Name, Phone, Email, Transaction ID, Course, College
         if ($request->filled('search')) {
             $search = trim($request->search);
             $query->where(function ($q) use ($search) {
@@ -27,6 +28,7 @@ class StudentBillController extends Controller
                   ->orWhere('student_email', 'like', "%{$search}%")
                   ->orWhere('transaction_id', 'like', "%{$search}%")
                   ->orWhere('course_name', 'like', "%{$search}%")
+                  ->orWhere('college_name', 'like', "%{$search}%")
                   ->orWhere('title', 'like', "%{$search}%");
             });
         }
@@ -44,6 +46,11 @@ class StudentBillController extends Controller
         // Filter by Student ID
         if ($request->filled('student_id')) {
             $query->where('student_id', $request->student_id);
+        }
+
+        // Filter by College ID
+        if ($request->filled('college_id')) {
+            $query->where('college_id', $request->college_id);
         }
 
         // Filter by Date Range
@@ -72,7 +79,12 @@ class StudentBillController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('admin.billings.index', compact('bills', 'metrics', 'students'));
+        // Active colleges for billing dropdown & filter
+        $colleges = College::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.billings.index', compact('bills', 'metrics', 'students', 'colleges'));
     }
 
     /**
@@ -82,11 +94,13 @@ class StudentBillController extends Controller
     {
         $validated = $request->validate([
             'student_id' => 'nullable|exists:students,id',
+            'college_id' => 'nullable|exists:colleges,id',
             'student_name' => 'required|string|max:255',
             'student_phone' => 'required|string|max:20',
             'student_email' => 'nullable|email|max:255',
             'student_father_name' => 'nullable|string|max:255',
             'course_name' => 'nullable|string|max:255',
+            'college_name' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
@@ -98,6 +112,10 @@ class StudentBillController extends Controller
             'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
+
+        if (!empty($validated['college_id']) && empty($validated['college_name'])) {
+            $validated['college_name'] = College::find($validated['college_id'])?->name;
+        }
 
         $validated['discount'] = $validated['discount'] ?? 0.00;
         $validated['tax_amount'] = $validated['tax_amount'] ?? 0.00;
@@ -119,7 +137,7 @@ class StudentBillController extends Controller
      */
     public function show(StudentBill $billing)
     {
-        $bill = $billing->load(['student', 'creator']);
+        $bill = $billing->load(['student', 'creator', 'college']);
         return view('admin.billings.show', compact('bill'));
     }
 
@@ -130,11 +148,13 @@ class StudentBillController extends Controller
     {
         $validated = $request->validate([
             'student_id' => 'nullable|exists:students,id',
+            'college_id' => 'nullable|exists:colleges,id',
             'student_name' => 'required|string|max:255',
             'student_phone' => 'required|string|max:20',
             'student_email' => 'nullable|email|max:255',
             'student_father_name' => 'nullable|string|max:255',
             'course_name' => 'nullable|string|max:255',
+            'college_name' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
@@ -147,6 +167,10 @@ class StudentBillController extends Controller
             'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
+
+        if (!empty($validated['college_id']) && empty($validated['college_name'])) {
+            $validated['college_name'] = College::find($validated['college_id'])?->name;
+        }
 
         $validated['discount'] = $validated['discount'] ?? 0.00;
         $validated['tax_amount'] = $validated['tax_amount'] ?? 0.00;

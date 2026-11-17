@@ -48,7 +48,7 @@
             flex: 1;
         }
         .inv-center-info {
-            flex: 2;
+            flex: 2.8;
             text-align: center;
         }
         .inv-seal-right {
@@ -276,25 +276,26 @@
         <div class="inv-header">
             <!-- Logo Left -->
             <div class="inv-logo-left">
-                <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" style="max-height: 52px; width: auto; object-fit: contain;">
-                <div style="font-size: 7.5px; font-weight: 800; color: #475569; letter-spacing: 1px; margin-top: 4px; text-transform: uppercase;">
-                    UDDAN EDUCATIONAL FOUNDATION
+                <img src="{{ asset('logo.png') }}" alt="Vardhan Foundation" style="max-height: 56px; width: auto; object-fit: contain;">
+                <div style="font-size: 8px; font-weight: 800; color: #005697; letter-spacing: 0.8px; margin-top: 4px; text-transform: uppercase;">
+                    EDU. VARDHAN FOUNDATION
                 </div>
             </div>
 
             <!-- Center Info -->
             <div class="inv-center-info">
-                <div style="color: #005697; font-size: 18px; font-weight: 800; line-height: 1.2;">
-                    Combined Counselling Board
+                <div style="color: #005697; font-size: 19px; font-weight: 900; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.5px;">
+                    EDU. VARDHAN FOUNDATION
                 </div>
-                <div style="background: #005697; color: #ffffff; font-weight: 800; font-size: 10.5px; padding: 2px 8px; text-transform: uppercase; margin: 3px auto 4px; display: inline-block; letter-spacing: 0.5px; border-radius: 2px;">
+                <div style="background: #005697; color: #ffffff; font-weight: 800; font-size: 10px; padding: 2px 8px; text-transform: uppercase; margin: 3px auto 4px; display: inline-block; letter-spacing: 0.5px; border-radius: 2px;">
                     BIHAR STUDENT COUNSELLING CENTER (BSCC)
                 </div>
-                <div style="font-size: 9.5px; color: #334155; line-height: 1.35;">
-                    Kargil Chowk (Gandhi Maidan), Beside Aawaran Vastralaya, Ashok Rajpath, Patna, Bihar
+                <div style="font-size: 8.5px; color: #334155; line-height: 1.35; margin-top: 2px;">
+                    <div><strong>Head Office:</strong> Near Care Hospital Naya Tola, Rajendra Nagar to Kumhrar Main Road, Opposite Yamaha Service Center, Kumhrar, Patna – 800027</div>
+                    <div><strong>Campus:</strong> Machinary Campus Khuram, Sampatchak, C/O – Shyam Narayan Prasad, Kumhrar, Patna – 800026, Bihar</div>
                 </div>
-                <div style="font-size: 9px; color: #005697; font-weight: 700; margin-top: 2px;">
-                    Helpline: 6202601616 &nbsp;|&nbsp; Web: www.bscc.net.in &nbsp;|&nbsp; Email: ccbwelfare@gmail.com
+                <div style="font-size: 8.5px; color: #005697; font-weight: 700; margin-top: 3px;">
+                    Tel: 8294294000 &nbsp;|&nbsp; Mob: 6206850133 &nbsp;|&nbsp; Web: www.bscc.net.in &nbsp;|&nbsp; Email: info@bscc.net.in
                 </div>
             </div>
 
@@ -314,7 +315,7 @@
             
             <!-- Student Details -->
             <div class="meta-box">
-                <div class="meta-box-title">Student Information</div>
+                <div class="meta-box-title">Student &amp; College Information</div>
                 <div class="meta-row">
                     <span class="meta-label">Student Name:</span>
                     <span class="meta-val" style="text-transform: capitalize;">{{ $bill->student_name }}</span>
@@ -331,6 +332,12 @@
                     <div class="meta-row">
                         <span class="meta-label">Course / Program:</span>
                         <span class="meta-val" style="color: #c2410c;">{{ $bill->course_name }}</span>
+                    </div>
+                @endif
+                @if($bill->college_name || $bill->college)
+                    <div class="meta-row">
+                        <span class="meta-label">College / Institute:</span>
+                        <span class="meta-val" style="color: #005697; font-weight: 800;">{{ $bill->college_name ?: $bill->college?->name }}</span>
                     </div>
                 @endif
             </div>
@@ -470,7 +477,7 @@
             <div class="terms-box">
                 <strong>Terms &amp; Important Information:</strong>
                 <ol style="padding-left: 14px; margin-top: 3px;">
-                    <li>This is an official computer-generated fee receipt issued by Uddan Educational Foundation.</li>
+                    <li>This is an official computer-generated fee receipt issued by Edu. Vardhan Foundation.</li>
                     <li>Payments are subject to clearing of cheque / electronic realization.</li>
                     <li>Bihar Student Credit Card (BSCC) counseling &amp; guidance is provided free of cost.</li>
                 </ol>
@@ -483,7 +490,7 @@
                     Authorized Signatory
                 </div>
                 <div style="font-size: 9px; color: #64748b;">
-                    Combined Counselling Board
+                    Edu. Vardhan Foundation
                 </div>
             </div>
         </div>

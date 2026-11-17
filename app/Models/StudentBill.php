@@ -13,11 +13,13 @@ class StudentBill extends Model
     protected $fillable = [
         'invoice_no',
         'student_id',
+        'college_id',
         'student_name',
         'student_phone',
         'student_email',
         'student_father_name',
         'course_name',
+        'college_name',
         'title',
         'amount',
         'discount',
@@ -107,6 +109,14 @@ class StudentBill extends Model
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');
+    }
+
+    /**
+     * Associated College
+     */
+    public function college()
+    {
+        return $this->belongsTo(College::class, 'college_id');
     }
 
     /**

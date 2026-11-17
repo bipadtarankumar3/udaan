@@ -10,15 +10,18 @@
     payModalOpen: false,
     deleteModalOpen: false,
     studentsList: {{ Js::from($students) }},
+    collegesList: {{ Js::from($colleges) }},
     
     // Create Bill Form State
     newBill: {
         student_id: '',
+        college_id: '',
         student_name: '',
         student_phone: '',
         student_email: '',
         student_father_name: '',
         course_name: '',
+        college_name: '',
         title: 'Admission Counselling & Registration Fee',
         amount: 0,
         discount: 0,
@@ -36,11 +39,13 @@
         id: null,
         invoice_no: '',
         student_id: '',
+        college_id: '',
         student_name: '',
         student_phone: '',
         student_email: '',
         student_father_name: '',
         course_name: '',
+        college_name: '',
         title: '',
         amount: 0,
         discount: 0,
@@ -85,6 +90,22 @@
         }
     },
 
+    onCollegeSelect(colId) {
+        if (!colId) return;
+        const col = this.collegesList.find(c => c.id == colId);
+        if (col) {
+            this.newBill.college_name = col.name || '';
+        }
+    },
+
+    onEditCollegeSelect(colId) {
+        if (!colId) return;
+        const col = this.collegesList.find(c => c.id == colId);
+        if (col) {
+            this.currentBill.college_name = col.name || '';
+        }
+    },
+
     calcTotal(amount, discount, tax) {
         return Math.max(0, (parseFloat(amount) || 0) - (parseFloat(discount) || 0) + (parseFloat(tax) || 0));
     },
@@ -99,11 +120,13 @@
             id: bill.id,
             invoice_no: bill.invoice_no,
             student_id: bill.student_id || '',
+            college_id: bill.college_id || '',
             student_name: bill.student_name,
             student_phone: bill.student_phone,
             student_email: bill.student_email || '',
             student_father_name: bill.student_father_name || '',
             course_name: bill.course_name || '',
+            college_name: bill.college_name || (bill.college ? bill.college.name : ''),
             title: bill.title,
             amount: parseFloat(bill.amount) || 0,
             discount: parseFloat(bill.discount) || 0,
@@ -272,15 +295,29 @@
         <form action="{{ route('admin.billings.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
             
             <!-- Search Input -->
-            <div class="lg:col-span-4 relative">
+            <div class="lg:col-span-3 relative">
                 <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input 
                     type="text" 
                     name="search" 
                     value="{{ request('search') }}" 
-                    placeholder="Search invoice #, student name, phone, UTR, course..." 
+                    placeholder="Search invoice, student, phone, college..." 
                     class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition"
                 >
+            </div>
+
+            <!-- College Filter -->
+            <div class="lg:col-span-3">
+                <select 
+                    name="college_id" 
+                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition"
+                    onchange="this.form.submit()"
+                >
+                    <option value="">All Colleges</option>
+                    @foreach($colleges as $c)
+                        <option value="{{ $c->id }}" {{ request('college_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Status Filter -->
@@ -303,7 +340,7 @@
                     name="payment_method" 
                     class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition"
                 >
-                    <option value="all">All Payment Modes</option>
+                    <option value="all">All Modes</option>
                     <option value="Cash" {{ request('payment_method') === 'Cash' ? 'selected' : '' }}>Cash</option>
                     <option value="UPI / QR Code" {{ request('payment_method') === 'UPI / QR Code' ? 'selected' : '' }}>UPI / QR Code</option>
                     <option value="Net Banking" {{ request('payment_method') === 'Net Banking' ? 'selected' : '' }}>Net Banking</option>
@@ -311,17 +348,6 @@
                     <option value="DRCC Bihar Credit Card" {{ request('payment_method') === 'DRCC Bihar Credit Card' ? 'selected' : '' }}>DRCC Credit Card</option>
                     <option value="Cheque" {{ request('payment_method') === 'Cheque' ? 'selected' : '' }}>Cheque</option>
                 </select>
-            </div>
-
-            <!-- Date From -->
-            <div class="lg:col-span-2">
-                <input 
-                    type="date" 
-                    name="date_from" 
-                    value="{{ request('date_from') }}" 
-                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition text-slate-600"
-                    title="From billing date"
-                >
             </div>
 
             <!-- Submit & Reset Buttons -->
@@ -398,16 +424,23 @@
                                 </div>
                             </td>
 
-                            <!-- Purpose & Course -->
+                            <!-- Purpose & Course / College -->
                             <td class="py-3.5 px-4">
                                 <div class="font-medium text-slate-800 line-clamp-1" title="{{ $bill->title }}">
                                     {{ $bill->title }}
                                 </div>
-                                @if($bill->course_name)
-                                    <div class="text-[11px] text-orange-700 font-semibold mt-0.5">
-                                        <i class="fa-solid fa-book-open text-[9px]"></i> {{ $bill->course_name }}
-                                    </div>
-                                @endif
+                                <div class="flex flex-col gap-0.5 mt-0.5">
+                                    @if($bill->course_name)
+                                        <div class="text-[11px] text-orange-700 font-semibold">
+                                            <i class="fa-solid fa-book-open text-[9px]"></i> {{ $bill->course_name }}
+                                        </div>
+                                    @endif
+                                    @if($bill->college_name || $bill->college)
+                                        <div class="text-[11px] text-blue-700 font-semibold flex items-center gap-1" title="College: {{ $bill->college_name ?: $bill->college?->name }}">
+                                            <i class="fa-solid fa-building-columns text-[9px]"></i> {{ $bill->college_name ?: $bill->college?->name }}
+                                        </div>
+                                    @endif
+                                </div>
                             </td>
 
                             <!-- Total Payable -->
@@ -617,6 +650,30 @@
                     </div>
                 </div>
 
+                <!-- College Selection -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            College / Institute (from College Master)
+                        </label>
+                        <select 
+                            name="college_id" 
+                            x-model="newBill.college_id" 
+                            @change="onCollegeSelect(newBill.college_id)"
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+                        >
+                            <option value="">-- Select College (Optional) --</option>
+                            <template x-for="col in collegesList" :key="col.id">
+                                <option :value="col.id" x-text="col.name + (col.city ? ' (' + col.city + ')' : '')"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">College Name (or Custom / Manual)</label>
+                        <input type="text" name="college_name" x-model="newBill.college_name" placeholder="e.g. Netaji Subhas Institute of Technology" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500">
+                    </div>
+                </div>
+
                 <!-- Billing Purpose / Title -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Billing Purpose / Item Title <span class="text-red-500">*</span></label>
@@ -752,6 +809,30 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Course / Stream</label>
                         <input type="text" name="course_name" x-model="currentBill.course_name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+                </div>
+
+                <!-- College Selection Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            College / Institute (from College Master)
+                        </label>
+                        <select 
+                            name="college_id" 
+                            x-model="currentBill.college_id" 
+                            @change="onEditCollegeSelect(currentBill.college_id)"
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                        >
+                            <option value="">-- Select College (Optional) --</option>
+                            <template x-for="col in collegesList" :key="col.id">
+                                <option :value="col.id" x-text="col.name + (col.city ? ' (' + col.city + ')' : '')"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">College Name (or Custom / Manual)</label>
+                        <input type="text" name="college_name" x-model="currentBill.college_name" placeholder="e.g. Netaji Subhas Institute of Technology" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500">
                     </div>
                 </div>
 

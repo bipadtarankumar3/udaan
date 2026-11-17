@@ -148,7 +148,18 @@
                     </div>
                 </a>
 
-                <!-- 5. Student Billing -->
+                <!-- 5. College Master -->
+                <a 
+                    href="{{ route('admin.colleges.index') }}" 
+                    class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.colleges.*') ? 'bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white shadow-md shadow-red-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}"
+                >
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-building-columns w-4 text-center {{ request()->routeIs('admin.colleges.*') ? 'text-white' : 'text-slate-400' }}"></i>
+                        <span>College Master</span>
+                    </div>
+                </a>
+
+                <!-- 6. Student Billing -->
                 <a 
                     href="{{ route('admin.billings.index') }}" 
                     class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.billings.*') ? 'bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white shadow-md shadow-red-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}"
