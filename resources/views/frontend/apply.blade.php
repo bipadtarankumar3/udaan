@@ -255,7 +255,7 @@
                   <option value="">Select Qualification</option>
                   <option value="10th" {{ old('qualification') == '10th' ? 'selected' : '' }}>10th</option>
                   <option value="12th" {{ old('qualification') == '12th' ? 'selected' : '' }}>12th</option>
-                  <option value="Above this" {{ old('qualification') == 'Above this' ? 'selected' : '' }}>Above this</option>
+                  <option value="Last Qualification" {{ in_array(old('qualification'), ['Last Qualification', 'Last qualification', 'Above this']) ? 'selected' : '' }}>Last Qualification</option>
                 </select>
               </div>
             </div>

@@ -279,12 +279,7 @@
                     <option value="">All Qualifications</option>
                     <option value="10th" {{ request('qualification') == '10th' ? 'selected' : '' }}>10th</option>
                     <option value="12th" {{ request('qualification') == '12th' ? 'selected' : '' }}>12th</option>
-                    <option value="Above this" {{ request('qualification') == 'Above this' ? 'selected' : '' }}>Above this</option>
-                    <option value="10th Pass" {{ request('qualification') == '10th Pass' ? 'selected' : '' }}>10th Pass</option>
-                    <option value="12th Appearing" {{ request('qualification') == '12th Appearing' ? 'selected' : '' }}>12th Appearing</option>
-                    <option value="12th Pass" {{ request('qualification') == '12th Pass' ? 'selected' : '' }}>12th Pass</option>
-                    <option value="Graduation" {{ request('qualification') == 'Graduation' ? 'selected' : '' }}>Graduation</option>
-                    <option value="Diploma" {{ request('qualification') == 'Diploma' ? 'selected' : '' }}>Diploma</option>
+                    <option value="Last Qualification" {{ in_array(request('qualification'), ['Last Qualification', 'Last qualification', 'Above this']) ? 'selected' : '' }}>Last Qualification</option>
                 </select>
             </div>
 
@@ -617,7 +612,7 @@
                             <option value="">Select Qualification</option>
                             <option value="10th">10th</option>
                             <option value="12th">12th</option>
-                            <option value="Above this">Above this</option>
+                            <option value="Last Qualification">Last Qualification</option>
                             <option value="10th Pass">10th Pass</option>
                             <option value="12th Appearing">12th Appearing</option>
                             <option value="12th Pass">12th Pass (Science)</option>
@@ -839,7 +834,7 @@
                             <option value="">Select Qualification</option>
                             <option value="10th">10th</option>
                             <option value="12th">12th</option>
-                            <option value="Above this">Above this</option>
+                            <option value="Last Qualification">Last Qualification</option>
                             <option value="10th Pass">10th Pass</option>
                             <option value="12th Appearing">12th Appearing</option>
                             <option value="12th Pass">12th Pass</option>
