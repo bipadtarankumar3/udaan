@@ -76,7 +76,7 @@
                 <i class="fa-solid fa-shield-halved text-amber-400"></i>
                 <span>Official Staff & Telecaller Lead Management CRM</span>
             </div>
-            <span>&copy; {{ date('Y') }} Uddan Educational Foundation</span>
+            <span>&copy; {{ date('Y') }} Vardhan Foundation</span>
         </div>
     </div>
 
@@ -345,7 +345,7 @@
                     </span>
                 </div>
                 <p class="text-[11px] text-slate-400">
-                    &copy; {{ date('Y') }} Uddan Educational Foundation. All rights reserved.
+                    &copy; {{ date('Y') }} Vardhan Foundation. All rights reserved.
                 </p>
             </div>
 

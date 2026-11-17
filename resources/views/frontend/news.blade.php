@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
-@section('title', ($selectedCategory ? $selectedCategory->name . ' — ' : '') . 'News & Media — Udaan Foundation')
-@section('meta_description', 'Stay updated with the latest news, scholarship announcements, skill development programs, and community welfare initiatives by Udaan Foundation.')
+@section('title', ($selectedCategory ? $selectedCategory->name . ' — ' : '') . 'News & Media — Vardhan Foundation')
+@section('meta_description', 'Stay updated with the latest news, scholarship announcements, skill development programs, and higher education initiatives by Vardhan Foundation.')
 
 @push('styles')
 <style>
@@ -449,7 +449,7 @@
         @endif
       </h1>
       <p class="news-hero-sub">
-        Discover how Udaan Foundation is creating meaningful educational transformation, empowering women, and delivering student support across India.
+        Discover how Vardhan Foundation is creating meaningful educational transformation, empowering youth, and delivering student support across India.
       </p>
     </div>
 
@@ -562,7 +562,7 @@
                   <div class="card-footer-wrap">
                     <div style="display:flex; align-items:center; gap:6px; color:#64748b; font-weight:500;">
                       <i class="far fa-user" style="color:#014655;"></i>
-                      <span>{{ $post->author->name ?? 'Udaan Team' }}</span>
+                      <span>{{ $post->author->name ?? 'Vardhan Team' }}</span>
                     </div>
                     <a href="{{ route('frontend.news.show', $post->slug) }}" class="card-read-link">
                       <span>Read More</span>
@@ -680,7 +680,7 @@
           <p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin-bottom:16px;">
             Subscribe to receive direct notifications regarding admission dates, scholarships &amp; welfare drives.
           </p>
-          <form onsubmit="event.preventDefault(); alert('Thank you for subscribing to Udaan Foundation updates!'); this.reset();">
+          <form onsubmit="event.preventDefault(); alert('Thank you for subscribing to Vardhan Foundation updates!'); this.reset();">
             <input 
               type="email" 
               placeholder="Enter your email address" 
@@ -719,7 +719,7 @@
             <a href="#" style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; color:#1877f2; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:14px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><i class="fab fa-facebook-f"></i></a>
             <a href="#" style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; color:#e4405f; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:14px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><i class="fab fa-instagram"></i></a>
             <a href="#" style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; color:#ff0000; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:14px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><i class="fab fa-youtube"></i></a>
-            <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Udaan Foundation!" target="_blank" style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; color:#25d366; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:14px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Vardhan Foundation!" target="_blank" style="width:38px; height:38px; border-radius:50%; background:#f1f5f9; color:#25d366; display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:14px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
 

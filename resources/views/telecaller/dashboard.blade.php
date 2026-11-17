@@ -74,7 +74,7 @@
                 </div>
                 <div>
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200">
-                        Uddan Telecaller Desk
+                        Vardhan Telecaller Desk
                     </span>
                     <h2 class="text-xl sm:text-2xl font-black font-heading text-slate-900 mt-1">
                         {{ isset($isAdmin) && $isAdmin ? 'Counselor Desk:' : 'Welcome,' }} <span class="text-orange-600">{{ $targetUser->name ?? auth()->user()->name }}</span>

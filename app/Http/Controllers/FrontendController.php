@@ -60,7 +60,7 @@ class FrontendController extends Controller
             'status' => 'New',
             'priority' => 'Medium',
             'next_followup_at' => $counsellingDate,
-            'current_remarks' => 'Application submitted online via Udaan Foundation website.',
+            'current_remarks' => 'Application submitted online via Vardhan Foundation website.',
         ]);
 
         // Redirect with search parameter so student sees their letter immediately with success message

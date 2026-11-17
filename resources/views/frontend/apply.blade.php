@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'Apply for Free Career Counselling & Admission Guidance — Udaan Foundation')
+@section('title', 'Apply for Free Career Counselling & Admission Guidance — Vardhan Foundation')
 @section('meta_description', 'Apply online for Bihar Students Counselling Center Awareness Program 2025. Get free expert guidance for DRCC Student Credit Card and college admissions.')
 
 @push('styles')

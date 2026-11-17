@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('title', 'Udaan Foundation — Empowering Lives, Inspiring Change')</title>
-  <meta name="description" content="@yield('meta_description', 'Udaan Foundation empowers communities through education, skill development, women empowerment, and community development programs across India.')">
+  <title>@yield('title', 'Vardhan Foundation — Empowering Minds, Building Futures')</title>
+  <meta name="description" content="@yield('meta_description', 'Vardhan Foundation empowers students through higher education guidance, 100% free career counselling, and Bihar Student Credit Card (BSCC/DRCC) assistance across India.')">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,13 +23,13 @@
   <div class="container">
     <div class="top-bar-left">
       <a href="tel:+916206850133"><i class="fas fa-phone-alt"></i> +91 6206850133</a>
-      <a href="mailto:info@udaanfoundation.org"><i class="fas fa-envelope"></i> info@udaanfoundation.org</a>
+      <a href="mailto:info@vardhanfoundation.org"><i class="fas fa-envelope"></i> info@vardhanfoundation.org</a>
     </div>
     <div class="top-bar-right">
       <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
       <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
       <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Udaan Foundation!" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Vardhan Foundation!" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
       @auth
         @if(auth()->user()->hasRole(['Super Admin', 'Admin']))
           <a href="{{ route('admin.dashboard') }}" class="staff-portal-btn" style="background:#FFA500 !important; color:#000 !important; font-weight:700;"><i class="fas fa-gauge-high"></i> Dashboard</a>
@@ -120,8 +120,8 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="{{ asset('footer logo.png') }}" alt="Vardhan Foundation" style="max-height:80px; width:auto; margin-bottom:15px;" onerror="this.src='{{ asset('logo.png') }}'">
-        <p><strong>UDDAN IS AN UNIT OF EDU. UDDAN FOUNDATION</strong><br>We are dedicated to empowering lives and inspiring change through education, skill development, women empowerment, and community development programs across India.</p>
+        <img src="{{ asset('footer logo.png') }}" alt="Vardhan Foundation" style="max-height:85px; width:auto; margin-bottom:15px;" onerror="this.src='{{ asset('logo.png') }}'">
+        <p><strong>VARDHAN FOUNDATION</strong><br>Empowering Minds, Building Futures. We are dedicated to empowering students through higher education guidance, skill development, and government scholarship & loan support including the Bihar Student Credit Card (MNSSBY/DRCC).</p>
         <div class="footer-social">
           <a href="#"><i class="fab fa-facebook-f"></i></a>
           <a href="#"><i class="fab fa-instagram"></i></a>
@@ -160,7 +160,7 @@
           <li><i class="fas fa-map-marker-alt"></i><span style="font-size:12px;"><strong>Chapra Branch:</strong> RNP School Campus Mirchya Tola Daulatganj, PIN 841301</span></li>
           <li><i class="fas fa-map-marker-alt"></i><span style="font-size:12px;"><strong>Siwan Branch:</strong> Bindu Davi ITI Campus (moli ka Bathan) near dr. P Davi more, PIN 841227</span></li>
           <li><i class="fas fa-phone-alt"></i><span>+91 6206850133</span></li>
-          <li><i class="fas fa-envelope"></i><span>info@udaanfoundation.org</span></li>
+          <li><i class="fas fa-envelope"></i><span>info@vardhanfoundation.org</span></li>
           <li><i class="fas fa-clock"></i><span>Mon - Sat: 9:00 AM - 6:00 PM</span></li>
         </ul>
       </div>
@@ -168,7 +168,7 @@
   </div>
   <div class="footer-bottom">
     <div class="container">
-      <p>&copy; {{ date('Y') }} Udaan Foundation. All Rights Reserved. | Designed for Higher Education Support |
+      <p>&copy; {{ date('Y') }} Vardhan Foundation. All Rights Reserved. | Designed for Higher Education Support |
         <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
       </p>
     </div>
@@ -176,7 +176,7 @@
 </footer>
 
 <!-- WhatsApp Float -->
-<a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Udaan Foundation!" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+<a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello Vardhan Foundation!" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
   <i class="fab fa-whatsapp"></i>
 </a>
 

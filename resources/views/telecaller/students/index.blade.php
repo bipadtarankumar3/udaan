@@ -184,7 +184,7 @@
                                     </a>
                                     @if($student->whatsapp_no)
                                         <a 
-                                            href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $student->whatsapp_no) }}?text=Hello%20{{ urlencode($student->name) }},%20I%20am%20calling%20from%20Uddan%20Educational%20Foundation%20regarding%20your%20counselling%20application." 
+                                            href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $student->whatsapp_no) }}?text=Hello%20{{ urlencode($student->name) }},%20I%20am%20calling%20from%20Vardhan%20Foundation%20regarding%20your%20counselling%20application." 
                                             target="_blank" 
                                             class="text-emerald-500 hover:text-emerald-600 p-1 hover:bg-slate-100 rounded" 
                                             title="Chat on WhatsApp"

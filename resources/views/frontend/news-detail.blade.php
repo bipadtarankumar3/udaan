@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', $post->title . ' — Udaan Foundation')
+@section('title', $post->title . ' — Vardhan Foundation')
 @section('meta_description', $post->excerpt ?? Str::limit(strip_tags($post->content), 160))
 
 @push('styles')
@@ -349,7 +349,7 @@
         </div>
         <div class="article-meta-item">
           <i class="far fa-user" style="color:#FFA500;"></i>
-          <span>{{ $post->author->name ?? 'Udaan Foundation' }}</span>
+          <span>{{ $post->author->name ?? 'Vardhan Foundation' }}</span>
         </div>
         <div class="article-meta-item">
           <i class="far fa-clock" style="color:#FFA500;"></i>
@@ -451,7 +451,7 @@
             </div>
             <div>
               <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:#E51E25; letter-spacing:0.5px;">Published By</div>
-              <h4 style="font-size:16px; font-weight:700; color:#0f172a; margin: 2px 0 4px;">{{ $post->author->name ?? 'Edu. Udaan Foundation' }}</h4>
+              <h4 style="font-size:16px; font-weight:700; color:#0f172a; margin: 2px 0 4px;">{{ $post->author->name ?? 'Vardhan Foundation' }}</h4>
               <p style="font-size:13px; color:#64748b; margin:0; line-height:1.5;">
                 Committed to delivering higher educational opportunities, BSCC student credit counselling, and grassroots community empowerment across India.
               </p>

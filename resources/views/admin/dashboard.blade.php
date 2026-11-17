@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Top Hero Banner with Uddan Educational Foundation identity -->
+    <!-- Top Hero Banner with Vardhan Foundation identity -->
     <div class="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm relative overflow-hidden">
         <!-- Subtle warm accent bar -->
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-orange-500 to-amber-500"></div>
@@ -24,7 +24,7 @@
                         <span class="text-slate-500 text-xs font-medium">• Bihar Student Credit Card (DRCC) Counseling</span>
                     </div>
                     <h2 class="text-xl sm:text-2xl font-black font-heading text-slate-900 mt-1">
-                        Uddan Educational Foundation <span class="text-orange-600 font-normal">Counseling Central</span>
+                        Vardhan Foundation <span class="text-orange-600 font-normal">Counseling Central</span>
                     </h2>
                     <p class="text-xs text-slate-500 mt-0.5">
                         Overview of student counseling applications, telecaller lead distribution, and daily outreach.

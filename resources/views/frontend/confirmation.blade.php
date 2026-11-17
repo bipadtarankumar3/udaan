@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'Counselling Letter & Admission Confirmation — Udaan Foundation')
+@section('title', 'Counselling Letter & Admission Confirmation — Vardhan Foundation')
 
 @push('styles')
 <style>

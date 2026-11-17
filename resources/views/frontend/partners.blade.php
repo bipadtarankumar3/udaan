@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'Approvals & Partners — Udaan Foundation')
+@section('title', 'Approvals & Partners — Vardhan Foundation')
 
 @section('content')
 <section class="section" style="padding: 0;">
@@ -55,7 +55,7 @@
 <section class="cta-section">
   <div class="container" style="position:relative;z-index:1;">
     <h2>Become a Partner</h2>
-    <p>Join hands with Udaan Foundation to create lasting social impact. We welcome partnerships with corporates, NGOs, and government bodies.</p>
+    <p>Join hands with Vardhan Foundation to create lasting educational and social impact. We welcome partnerships with colleges, universities, corporates, and government bodies.</p>
     <a href="{{ route('frontend.contact') }}" class="btn btn-white">Partner With Us <i class="fas fa-arrow-right"></i></a>
   </div>
 </section>

@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'Available Courses — Udaan Foundation')
+@section('title', 'Available Courses — Vardhan Foundation')
 
 @section('content')
 <section class="section section-light">

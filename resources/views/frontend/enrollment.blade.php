@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'Enrollment Process — Udaan Foundation')
+@section('title', 'Enrollment Process — Vardhan Foundation')
 
 @section('content')
 <section class="section section-light">
@@ -12,7 +12,7 @@
         <li><i class="fas fa-globe"></i> <strong>Online:</strong> Visit our website and enter your Application ID on the status tracker</li>
         <li><i class="fas fa-sms"></i> <strong>SMS:</strong> Send <code>APP &lt;Your Application ID&gt;</code> to <strong>56789</strong></li>
         <li><i class="fas fa-phone-alt"></i> <strong>Call:</strong> Dial our helpline <strong>+91 6206850133</strong> for instant status update</li>
-        <li><i class="fas fa-envelope"></i> <strong>Email:</strong> Write to <strong>status@udaanfoundation.org</strong> with your Application ID</li>
+        <li><i class="fas fa-envelope"></i> <strong>Email:</strong> Write to <strong>status@vardhanfoundation.org</strong> with your Application ID</li>
         <li><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> Send your Application ID to our WhatsApp number for quick response</li>
       </ul>
     </div>
@@ -33,7 +33,7 @@
       </div>
       <div class="faq-item fade-in">
         <button class="faq-question">Is there any fee for enrollment? <i class="fas fa-chevron-down"></i></button>
-        <div class="faq-answer"><p>No, absolutely not. All Udaan Foundation programs are completely FREE of cost. We do not charge any registration fee, processing fee, or tuition fee. If anyone asks you for money on our behalf, please report it immediately.</p></div>
+        <div class="faq-answer"><p>No, absolutely not. All Vardhan Foundation programs are completely FREE of cost. We do not charge any registration fee, processing fee, or tuition fee. If anyone asks you for money on our behalf, please report it immediately.</p></div>
       </div>
       <div class="faq-item fade-in">
         <button class="faq-question">Can I apply for multiple programs simultaneously? <i class="fas fa-chevron-down"></i></button>

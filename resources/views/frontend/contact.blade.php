@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
-@section('title', 'Contact Us — Udaan Foundation')
-@section('meta_description', 'Get in touch with Udaan Educational Foundation for admission inquiries, DRCC student credit card assistance, free career guidance, or campus visits.')
+@section('title', 'Contact Us — Vardhan Foundation')
+@section('meta_description', 'Get in touch with Vardhan Foundation for admission inquiries, DRCC student credit card assistance, free career guidance, or campus visits.')
 
 @section('content')
 
@@ -11,7 +11,7 @@
     <span style="display:inline-block; padding: 5px 15px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.25);">
       Get in Touch
     </span>
-    <h1 style="font-size: 32px; font-weight: 800; margin: 0 0 10px;">Contact Udaan Educational Foundation</h1>
+    <h1 style="font-size: 32px; font-weight: 800; margin: 0 0 10px;">Contact Vardhan Foundation</h1>
     <p style="color: rgba(255,255,255,0.85); margin: 0; font-size: 15px;">Have questions about colleges, admission eligibility, or DRCC loan support? We are here to guide you.</p>
   </div>
 </section>
@@ -120,7 +120,7 @@
           <div>
             <h4 style="color: #014655; font-weight: 700; margin-bottom: 4px;">Email Support</h4>
             <p style="font-size: 14px; color: #475569; margin: 0;">
-              <a href="mailto:info@udaanfoundation.org" style="color: #014655; text-decoration: none;">info@udaanfoundation.org</a>
+              <a href="mailto:info@vardhanfoundation.org" style="color: #014655; text-decoration: none;">info@vardhanfoundation.org</a>
             </p>
           </div>
         </div>
@@ -131,7 +131,7 @@
             <h4 style="color: #014655; font-weight: 700; margin-bottom: 4px;">Instant WhatsApp Guidance</h4>
             <p style="font-size: 13.5px; color: #475569; margin: 0;">
               Chat directly with our senior admission team:<br>
-              <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello%20Udaan%20Foundation!%20I%20want%20to%20inquire%20about%20admissions." target="_blank" style="color: #25D366; font-weight: 700; text-decoration: none;">
+              <a href="https://api.whatsapp.com/send?phone=916206850133&text=Hello%20Vardhan%20Foundation!%20I%20want%20to%20inquire%20about%20admissions." target="_blank" style="color: #25D366; font-weight: 700; text-decoration: none;">
                 <i class="fab fa-whatsapp"></i> Start WhatsApp Chat &rarr;
               </a>
             </p>

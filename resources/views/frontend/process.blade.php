@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'How It Works & Process — Udaan Foundation')
+@section('title', 'How It Works & Process — Vardhan Foundation')
 
 @section('content')
 <section class="section section-light">
@@ -53,7 +53,7 @@
 <section class="cta-section">
   <div class="container" style="position:relative;z-index:1;">
     <h2>Start Your Journey Today</h2>
-    <p>Don't wait — apply now and take the first step towards a brighter future with Udaan Foundation.</p>
+    <p>Don't wait — apply now and take the first step towards a brighter future with Vardhan Foundation.</p>
     <a href="{{ route('frontend.apply') }}" class="btn btn-white">Apply Now <i class="fas fa-arrow-right"></i></a>
   </div>
 </section>
